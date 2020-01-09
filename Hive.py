@@ -12,12 +12,12 @@ class Hive:
         self.nectar = start_nectar
         self.food_level = 1.1
 
-        foragers = int(FORAGERS_TO_POPULATION * population)
-        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * foragers))]
-        self.employees = [Employee([pos_x,pos_y]) for _ in range(foragers - len(self.scouts))]
+        num_foragers = int(FORAGERS_TO_POPULATION * population)
+        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * num_foragers))]
+        self.employees = [Employee([pos_x,pos_y]) for _ in range(num_foragers - len(self.scouts))]
 
 
-    # Determine food level based on amount of pollen, nectar and growth rate. 
+    # Determine food level based on amount of pollen, nectar and growth rate.
     # Also adjust amount of food left aftwards based on consumption rate of food.
     def update_food_level():
         pass
@@ -26,3 +26,16 @@ class Hive:
     def update():
         update_food_level()
         self.population = self.population * food_level
+
+        num_foragers = int(FORAGERS_TO_POPULATION * self.population)
+        num_scouts = int(foragers * SCOUTS_TO_EMPLOYEES)
+        num_employees = num_foragers - num_scouts
+
+        new_scouts = num_scouts - len(self.scouts)
+        new_employees = num_employees - len(self.employees)
+
+        for _ in range(new_scouts):
+            self.scouts.append(Scout([self.pos_x, self.pos_y]))
+
+        for _ in range(new_employees):
+            self.scouts.append(Employee([self.pos_x, self.pos_y]))
