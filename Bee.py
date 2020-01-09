@@ -8,6 +8,7 @@ class Bee:
         self.load_nectar = 0
 
         self.food_location = []
+        self.food_priority = 0
 
     def gather_food():
         pass
