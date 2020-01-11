@@ -1,6 +1,7 @@
 FORAGERS_TO_POPULATION = 1/3
 SCOUTS_TO_EMPLOYEES = 1/10
 
+#Maintain population and food levels, spawn new bees as needed
 class Hive:
     def __init__(self, pos_x, pos_y, start_population, start_pollen, start_nectar, growth_rate, consumption_rate):
         self.pos_x = pos_x
@@ -15,16 +16,17 @@ class Hive:
         num_foragers = int(FORAGERS_TO_POPULATION * population)
         self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * num_foragers))]
         self.employees = [Employee([pos_x,pos_y]) for _ in range(num_foragers - len(self.scouts))]
+        self.employed = []
 
 
     # Determine food level based on amount of pollen, nectar and growth rate.
     # Also adjust amount of food left aftwards based on consumption rate of food.
-    def update_food_level():
+    def update_food_level(self):
         pass
 
-
-    def update():
-        update_food_level()
+    #Update food levels and bee populations
+    def update(self):
+        self.update_food_level()
         self.population = self.population * food_level
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
