@@ -189,7 +189,7 @@ class GUI:
             if self.model.step() is True:
                 self.stopRunning()
             self.currentStep += 1
-            self.setStatusStr("Step " + str(self.currentStep))
+            self.setStatusStr(self.model.getDateAsString())
             self.status.configure(foreground='black')
             if (self.currentStep) % self.stepSize == 0:
                 self.drawModel()
@@ -201,7 +201,7 @@ class GUI:
         self.runPauseString.set("Continue Run")
         self.model.step()
         self.currentStep += 1
-        self.setStatusStr("Step " + str(self.currentStep))
+        self.setStatusStr(self.model.getDateAsString())
         self.drawModel()
         if self.param_entries:
             self.buttonSaveParameters.configure(state=NORMAL)
