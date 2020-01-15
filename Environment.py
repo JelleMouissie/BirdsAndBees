@@ -20,8 +20,6 @@ class Environment(Model):
         self.grid.initializeCells(self.diversity)
 
 
-
-
     def draw(self):
         pass
         # plt.cla()

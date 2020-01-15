@@ -23,10 +23,11 @@ class Cell:
             currentindex = randomindexes[i]
             self.vegitation[plantSpecies[i]] = amount
 
-        print(self.vegitation)
 
     def GetVegitation(self):
         return self.vegitation
+
+
 #
 # cell = Cell(3)
 # cell.IntializeVegitation()
