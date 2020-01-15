@@ -30,7 +30,7 @@ class Cell:
     def GetCellAttractiveness(self):
         totalAttractiveness = 0
         for plant in self.vegitation.keys():
-            totalAttractiveness += self.vegitation[plant][0] * plant.GetAttractiveNess()
+            totalAttractiveness += self.vegitation[(plant][1]/plant.GetNutrition()) * plant.GetAttractiveNess()
         return totalAttractiveness
 
 
