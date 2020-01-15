@@ -48,12 +48,12 @@ class Hive:
     def gather_food(self, scout, grid):
         priority = PRIORITY_BIAS * scout.food_value / scout.hive_distance    # Amount of employee bees assigned to food source
         start_slice = self.gather_group_id
-        end_slice = int(start_slice + priority) #todo int van gemaakt, is dat een goed idee?
+        end_slice = int(start_slice + priority)
         self.gather_group_id = end_slice
 
         gather_group = self.employees[start_slice : end_slice]
-        self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)    #TODO: gather food from grid location, update age of bees if location far away
-        # scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).value                         #TODO: get tile's food value
+        self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)
+        scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness()
 
     #Kill Bees >:)
     def update_bee_age(self):

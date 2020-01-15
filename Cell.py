@@ -34,14 +34,17 @@ class Cell:
         return totalAttractiveness
 
 
-    def GatherFood(self, gatherGroup): #todo add randomization and plant attraction
+    def GatherFood(self, gatherGroup):
+        print(len(gatherGroup))
         print(self.vegitation)
-        gatherAmountPerBee = 1
+
+        gatherAmountPerBee = 1  #todo add randomization and plant attraction
         gatheredFood = 0
         potentialFood = len(gatherGroup) * gatherAmountPerBee
         for plant in self.vegitation.keys():
             plantNutrition = self.vegitation[plant][1]
-            if plantNutrition < potentialFood:
+
+            if plantNutrition > potentialFood:
                 self.vegitation[plant][1] -= potentialFood
                 gatheredFood += potentialFood
                 break
@@ -50,4 +53,5 @@ class Cell:
                 potentialFood -= plantNutrition
                 self.vegitation[plant][1] = 0
         print(self.vegitation)
+        print()
         return gatheredFood
