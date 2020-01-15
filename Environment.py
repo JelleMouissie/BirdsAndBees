@@ -4,6 +4,7 @@ import matplotlib
 from Model import Model
 from GUI import GUI
 from Grid import Grid
+import Hive
 
 
 class Environment(Model):
@@ -14,11 +15,15 @@ class Environment(Model):
         self.make_param('y', 10)
         self.make_param('diversity', 2)
 
+        self.hives =  makeHives()
+
     def reset(self):
         self.currentDate = [0, 0]
         self.grid = Grid(self.x, self.y)
         self.grid.initializeCells(self.diversity)
 
+    def makeHives():
+        return [Hive(10, 10, 100, 1, 1, 1)]
 
     def draw(self):
         pass
@@ -26,7 +31,8 @@ class Environment(Model):
 
     def step(self):
         self.incrementDate()
-
+        for hive in self.hives:
+            hive.update([])      #TODO: Pass Grid object to retrieve plant information from Scout Bee location in Scout.update(Grid)
         pass
 
     def incrementDate(self):
