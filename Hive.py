@@ -41,7 +41,7 @@ class Hive:
             self.scouts.append(Scout([self.pos_x, self.pos_y]))
 
         for _ in range(new_employes):
-            self.scouts.append(Bee())
+            self.employees.append(Bee())
 
 
     #Gather unemployed bees based on priority, and collectivly gather food
