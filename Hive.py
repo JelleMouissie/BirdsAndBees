@@ -1,7 +1,7 @@
 import Bee
 
 FORAGERS_TO_POPULATION = 1/3
-SCOUTS_TO_EMPLOYEES = 1/10
+SCOUTS_TO_FORAGERS = 1/10
 
 PRIORITY_BIAS = 2     #TODO: Decide Bias in determining priority of found food source.
 
@@ -16,7 +16,7 @@ class Hive:
         self.food_level = start_food
 
         num_foragers = int(FORAGERS_TO_POPULATION * population)
-        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * num_foragers))]
+        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
         self.gather_group_id = 0
 
@@ -31,7 +31,7 @@ class Hive:
         self.population = self.population * self.food_level #TODO: implement actual growth based on food supplies                          !!!!
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
-        num_scouts = int(num_foragers * SCOUTS_TO_EMPLOYEES)
+        num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
         num_employees = num_foragers - num_scouts
 
         new_scouts = num_scouts - len(self.scouts)
