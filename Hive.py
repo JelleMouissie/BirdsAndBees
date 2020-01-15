@@ -18,7 +18,7 @@ class Hive:
         num_foragers = int(FORAGERS_TO_POPULATION * population)
         self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
-        self.gather_group_id = [0]
+        self.gather_group_id = 0
 
 
     #Do stuff with food?
@@ -47,9 +47,9 @@ class Hive:
     #Gather unemployed bees based on priority, and collectivly gather food
     def gather_food(self, scout, grid):
         priority = PRIORITY_BIAS * scout.food_value / scout.hive_distance    # Amount of employee bees assigned to food source
-        start_slice = self.gather_group_id[-1]
+        start_slice = self.gather_group_id
         end_slice = start_slice + priority
-        self.gather_group_id.append(end_slice)
+        self.gather_group_id = end_slice
 
         gather_group = self.employees[start_slice : end_slice]
         self.food_level += grid[scout.food_location[0], scout.food_location[1]].gather_food(gather_group)    #TODO: gather food from grid location, update age of bees if location far away
@@ -72,6 +72,7 @@ class Hive:
             if scout.update():
                 self.gather_food(scout, grid)
         self.update_bee_age()
+        self.gather_group_id = 0
 
 
     #Update food levels, bee populations and perform bee actions
