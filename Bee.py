@@ -1,7 +1,7 @@
 import random
 import math
 
-FOOD_BIAS = 0.75
+FOOD_BIAS = 75
 
 class Bee:
     def __init__(self):
@@ -39,7 +39,7 @@ class Scout(Bee):
     def search(self, grid):
         self.pos_x = random.randint(0,2) - 1
         self.pos_y = random.randint(0,2) - 1
-        
+
         tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness()
         if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.  gather_food           !!!
             self.food_location += [self.pos_x, self.pos_y]
