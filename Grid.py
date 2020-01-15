@@ -12,3 +12,6 @@ class Grid:
             for x in range(self.x):
                 row += [Cell(diversity)]
             self.cells += [row]
+
+    def Get(self, x, y):
+        return self.cells[x][y]

@@ -1,4 +1,4 @@
-import Bee
+from Bee import Scout, Bee
 
 FORAGERS_TO_POPULATION = 1/3
 SCOUTS_TO_EMPLOYEES = 1/10
@@ -15,7 +15,7 @@ class Hive:
         self.consumption_rate = consumption_rate
         self.food_level = start_food
 
-        num_foragers = int(FORAGERS_TO_POPULATION * population)
+        num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_EMPLOYEES * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
         self.gather_group_id = 0
@@ -48,12 +48,12 @@ class Hive:
     def gather_food(self, scout, grid):
         priority = PRIORITY_BIAS * scout.food_value / scout.hive_distance    # Amount of employee bees assigned to food source
         start_slice = self.gather_group_id
-        end_slice = start_slice + priority
+        end_slice = int(start_slice + priority) #todo int van gemaakt, is dat een goed idee?
         self.gather_group_id = end_slice
 
         gather_group = self.employees[start_slice : end_slice]
-        self.food_level += grid[scout.food_location[0], scout.food_location[1]].gather_food(gather_group)    #TODO: gather food from grid location, update age of bees if location far away
-        scout.food_value = grid[scout.food_location[0], scout.food_location[1]].value                         #TODO: get tile's food value
+        self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)    #TODO: gather food from grid location, update age of bees if location far away
+        # scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).value                         #TODO: get tile's food value
 
     #Kill Bees >:)
     def update_bee_age(self):
@@ -69,7 +69,7 @@ class Hive:
     def update_bees(self, grid):
         updated_scouts = []
         for scout in self.scouts:
-            if scout.update():
+            if scout.update(grid):
                 self.gather_food(scout, grid)
         self.update_bee_age()
         self.gather_group_id = 0
@@ -80,3 +80,6 @@ class Hive:
         self.update_food_level()
         self.update_population()
         self.update_bees(grid)
+
+    def incrementYear(self):
+        pass

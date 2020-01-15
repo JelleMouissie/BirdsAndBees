@@ -39,12 +39,12 @@ class Scout(Bee):
     def search(self, grid):
         self.pos_x = random.randint(0,2) - 1
         self.pos_y = random.randint(0,2) - 1
-
-        tile_value = grid[self.pos_x][self.pos_y].value   #TODO: Figure out how to check ground's tile_value                    !!!
-        if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.             !!!
-            self.food_location[self.pos_x, self.pos_y]
+        
+        tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness()
+        if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.  gather_food           !!!
+            self.food_location += [self.pos_x, self.pos_y]
             self.food_value = tile_value
-            self.hive_distance = math.sqrt(math.pow((self.pos_x - self.hive_location[0]), 2) + math.pow((self.pos_y - self.hive_location[1]))
+            self.hive_distance = math.sqrt(math.pow((self.pos_x - self.hive_location[0]), 2) + math.pow((self.pos_y - self.hive_location[1]), 2))
 
             return True
         return False

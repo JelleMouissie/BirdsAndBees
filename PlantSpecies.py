@@ -6,6 +6,13 @@ class PlantSpecies:
         self.nutrition = nutrition
         self.reproduction_coefficient = reproduction_coefficient
         self.bloom_period = bloom_period
+        self.attractiveness = attractiveness
+
+    def GetNutrition(self):
+        return self.nutrition
+
+    def GetAttractiveNess(self):
+        return self.attractiveness
 
 
 def GeneratePlantSpecies():
