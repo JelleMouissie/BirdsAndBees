@@ -33,10 +33,10 @@ class Environment(Model):
         self.incrementDate()
         for hive in self.hives:
             hive.update(self.grid)      #TODO: Pass Grid object to retrieve plant information from Scout Bee location in Scout.update(Grid)
-        pass
+        
 
     def incrementDate(self):
-        if self.currentDate[0] < 180:
+        if self.currentDate[0] < 200:
             self.currentDate[0] += 1
         else:
             self.currentDate[0] = 0
