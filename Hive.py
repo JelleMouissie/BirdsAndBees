@@ -28,7 +28,9 @@ class Hive:
 
     #Increase population and determine new amount of foragers and scouts.
     def update_population(self, currentDate):
-        growth = (1+0.03*(-(currentDate[0]/100 - 1)**2+1)+0.8)**(1/7)
+        f = 5.8
+        d = 0.014
+        growth = 1 + (-2*f*(currentDate[0]-110))/self.population + d
         print(growth)
         self.population = int(self.population * growth) #TODO: implement actual growth based on food supplies                          !!!!
 

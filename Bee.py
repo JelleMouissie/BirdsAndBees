@@ -12,7 +12,7 @@ class Bee:
     #Determine if bee dies, return False. Else if bee lives, increase age and return True
     def update_age(self):
         self.age += 1
-        return not (0.0625*self.age > np.random.rand())
+        return not (0.014*self.age > np.random.rand())
 
 class Scout(Bee):
     def __init__(self, hive_location):
