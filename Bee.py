@@ -2,7 +2,7 @@ import random
 import math
 import numpy as np
 
-FOOD_BIAS = 0.75
+FOOD_BIAS = 75
 
 class Bee:
     def __init__(self):
