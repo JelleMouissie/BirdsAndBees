@@ -35,8 +35,8 @@ class Cell:
 
 
     def GatherFood(self, gatherGroup):
-        print(len(gatherGroup))
-        print(self.vegitation)
+        # print(len(gatherGroup))
+        # print(self.vegitation)
 
         gatherAmountPerBee = 1  #todo add randomization and plant attraction
         gatheredFood = 0
@@ -52,6 +52,6 @@ class Cell:
                 gatheredFood += plantNutrition
                 potentialFood -= plantNutrition
                 self.vegitation[plant][1] = 0
-        print(self.vegitation)
-        print()
+        # print(self.vegitation)
+        # print()
         return gatheredFood

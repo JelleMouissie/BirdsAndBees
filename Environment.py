@@ -23,17 +23,19 @@ class Environment(Model):
         self.grid.initializeCells(self.diversity)
 
     def makeHives(self):
-        return [Hive(10, 10, 100, 1, 1, 1)]
+        return [Hive(10, 10, 10000, 1, 1, 1)]
 
     def draw(self):
+        print(self.hives[0].GetStatus())
+        print(self.currentDate)
         pass
         # plt.cla()
 
     def step(self):
         self.incrementDate()
         for hive in self.hives:
-            hive.update(self.grid)      #TODO: Pass Grid object to retrieve plant information from Scout Bee location in Scout.update(Grid)
-        
+            hive.update(self.grid, self.currentDate)      #TODO: Pass Grid object to retrieve plant information from Scout Bee location in Scout.update(Grid)
+
 
     def incrementDate(self):
         if self.currentDate[0] < 200:
@@ -44,7 +46,9 @@ class Environment(Model):
             self.incrementYear()
 
     def incrementYear(self):
-        self.hive.incrementYear()
+        self.draw()
+        for hive in self.hives:
+            hive.incrementYear()
 
     def getDateAsString(self):
         return "day: " + str(self.currentDate[0]) + "year: " + str(self.currentDate[1])

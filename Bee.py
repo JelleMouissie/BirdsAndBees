@@ -1,5 +1,6 @@
 import random
 import math
+import numpy as np
 
 FOOD_BIAS = 0.75
 
@@ -10,12 +11,8 @@ class Bee:
 
     #Determine if bee dies, return False. Else if bee lives, increase age and return True
     def update_age(self):
-        if self.age > 8:      #TODO: Implement actual death condition based on probability                             !!!
-            return False
-        else:
-            self.age += 1
-            return True
-
+        self.age += 1
+        return not (0.0625*self.age > np.random.rand())
 
 class Scout(Bee):
     def __init__(self, hive_location):
@@ -39,7 +36,7 @@ class Scout(Bee):
     def search(self, grid):
         self.pos_x = random.randint(0,2) - 1
         self.pos_y = random.randint(0,2) - 1
-        
+
         tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness()
         if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.  gather_food           !!!
             self.food_location += [self.pos_x, self.pos_y]

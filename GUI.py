@@ -191,8 +191,8 @@ class GUI:
             self.currentStep += 1
             self.setStatusStr(self.model.getDateAsString())
             self.status.configure(foreground='black')
-            if (self.currentStep) % self.stepSize == 0:
-                self.drawModel()
+            # if (self.currentStep) % self.stepSize == 0:
+            #     self.drawModel()
             self.rootWindow.after(int(self.timeInterval * 1.0 / self.stepSize),
                                   self.stepModel)
 

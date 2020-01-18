@@ -27,8 +27,10 @@ class Hive:
 
 
     #Increase population and determine new amount of foragers and scouts.
-    def update_population(self):
-        self.population = self.population * self.food_level #TODO: implement actual growth based on food supplies                          !!!!
+    def update_population(self, currentDate):
+        growth = (1+0.03*(-(currentDate[0]/100 - 1)**2+1)+0.8)**(1/7)
+        print(growth)
+        self.population = int(self.population * growth) #TODO: implement actual growth based on food supplies                          !!!!
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
@@ -61,7 +63,9 @@ class Hive:
         alive_employees = [employee for employee in self.employees if employee.update_age()]
         num_dead = len(self.scouts) - len(alive_scouts) + len(self.employees) - len(alive_employees)
 
+        # print(self.population)
         self.population -= num_dead
+        # print(self.population)
         self.scouts = alive_scouts
         self.employees = alive_employees
 
@@ -76,10 +80,13 @@ class Hive:
 
 
     #Update food levels, bee populations and perform bee actions
-    def update(self, grid):
+    def update(self, grid, currentDate):
         self.update_food_level()
-        self.update_population()
+        self.update_population(currentDate)
         self.update_bees(grid)
 
     def incrementYear(self):
         pass
+
+    def GetStatus(self):
+        return [self.population, len(self.scouts), len(self.employees)]
