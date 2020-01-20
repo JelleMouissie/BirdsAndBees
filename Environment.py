@@ -1,6 +1,7 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import sys
-import matplotlib
+import pandas as pd
 from Model import Model
 from GUI import GUI
 from Grid import Grid
@@ -22,12 +23,14 @@ class Environment(Model):
         self.grid = Grid(self.x, self.y)
         self.grid.initializeCells(self.diversity)
 
+
     def makeHives(self):
-        return [Hive(10, 10, 10000, 1, 1, 1)]
+        return [Hive(5, 5, 1000, 1000, 1, 1)]
 
     def draw(self):
         print(self.hives[0].GetStatus())
         print(self.currentDate)
+        self.plot()
         pass
         # plt.cla()
 
@@ -52,6 +55,13 @@ class Environment(Model):
 
     def getDateAsString(self):
         return "day: " + str(self.currentDate[0]) + "year: " + str(self.currentDate[1])
+
+    def plot(self):
+        plt.ion()
+        plt.cla()
+        df = pd.DataFrame(self.grid.GetFoodMatrix())
+        plt.table(cellText=df.values, loc='center')
+
 
 
 if __name__ == "__main__":

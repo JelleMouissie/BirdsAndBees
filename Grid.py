@@ -15,3 +15,15 @@ class Grid:
 
     def Get(self, x, y):
         return self.cells[x][y]
+
+    def Getlimits(self):
+        return self.x, self.y
+
+    def GetFoodMatrix(self):
+        matrix = []
+        for row in self.cells:
+            foodrow = []
+            for cell in row:
+                foodrow += [cell.getFoodLeft()]
+            matrix += [foodrow]
+        return matrix

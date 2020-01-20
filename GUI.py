@@ -212,7 +212,7 @@ class GUI:
         self.model.reset()
         self.currentStep = 0
         self.setStatusStr("Model has been reset")
-        self.drawModel()
+        # self.drawModel()
 
     def drawModel(self):
         if self.modelFigure is None:

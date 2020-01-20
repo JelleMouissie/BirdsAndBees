@@ -23,16 +23,37 @@ class Hive:
 
     #Do stuff with food?
     def update_food_level(self):
-        pass       #TODO: Implement this                                                                                                   !!!!
+        food_per_bee = 0.2
+        needed_food = food_per_bee * self.population
+        print("voor vreten", self.food_level, "Needed food:", needed_food)
+        if (needed_food > self.food_level):
+            needed_food -= self.food_level
+            self.food_level = 0
+            self.starvation(needed_food / food_per_bee)
+        else :
+            self.food_level -= needed_food
+        print("na vreten", self.food_level)
+
+    def starvation(self, shortage):
+        print(shortage)
+        percentageDeath = (shortage / self.population)/2 
+        self.population -= self.population * percentageDeath
+        self.scouts = self.scouts[0 : len(self.scouts) - int(len(self.scouts) * percentageDeath)]
+        self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]
+
 
 
     #Increase population and determine new amount of foragers and scouts.
     def update_population(self, currentDate):
-        f = 5.8
-        d = 0.014
-        growth = 1 + (-2*f*(currentDate[0]-110))/self.population + d
-        print(growth)
-        self.population = int(self.population * growth) #TODO: implement actual growth based on food supplies                          !!!!
+        # f = 5.8
+        # d = 0.014
+        # growth = 1 + (-2*f*(currentDate[0]-110))/self.population + 3*d
+        k = 0.00000017
+        max_pop = 300000
+        growth = (k * self.population * (max_pop - self.population))
+
+
+        self.population = int(self.population + growth) #TODO: implement actual growth based on food supplies                          !!!!
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
@@ -49,15 +70,28 @@ class Hive:
 
 
     #Gather unemployed bees based on priority, and collectivly gather food
-    def gather_food(self, scout, grid):
-        priority = PRIORITY_BIAS * scout.food_value / scout.hive_distance    # Amount of employee bees assigned to food source
-        start_slice = self.gather_group_id
-        end_slice = int(start_slice + priority)
-        self.gather_group_id = end_slice
+    def gather_food(self, scouts, grid):
+        priorities = []
+        totalpriority = 1
+        for scout in scouts:
+            priority = (PRIORITY_BIAS * scout.food_value / (scout.hive_distance + 1))/10 # Amount of employee bees assigned to food source
+            priorities += [priority]
+            totalpriority += priority
 
-        gather_group = self.employees[start_slice : end_slice]
-        self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)
-        scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness()
+        beesPerPrio = len(self.employees) / totalpriority
+        start_slice = 0
+        # print(priorities)
+        # print(beesPerPrio)
+        # print(len(self.employees))
+
+        for index, scout in enumerate(scouts):
+            end_slice = start_slice + int(priorities[index] * beesPerPrio)
+            # print(end_slice)/
+            gather_group = self.employees[start_slice : end_slice]
+            self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)
+            scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness()
+
+            start_slice = end_slice
 
     #Kill Bees >:)
     def update_bee_age(self):
@@ -74,9 +108,12 @@ class Hive:
     #First update scouts. If scout has a source, gather food with employee bees. Finally update age of all bees.
     def update_bees(self, grid):
         updated_scouts = []
+
         for scout in self.scouts:
             if scout.update(grid):
-                self.gather_food(scout, grid)
+                updated_scouts += [scout]
+
+        self.gather_food(updated_scouts, grid)
         self.update_bee_age()
         self.gather_group_id = 0
 
