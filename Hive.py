@@ -36,7 +36,7 @@ class Hive:
 
     def starvation(self, shortage):
         print(shortage)
-        percentageDeath = (shortage / self.population)/2 
+        percentageDeath = (shortage / self.population)
         self.population -= self.population * percentageDeath
         self.scouts = self.scouts[0 : len(self.scouts) - int(len(self.scouts) * percentageDeath)]
         self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]

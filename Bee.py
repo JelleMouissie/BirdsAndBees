@@ -10,9 +10,15 @@ class Bee:
         self.cargo = 0
 
     #Determine if bee dies, return False. Else if bee lives, increase age and return True
-    def update_age(self):
+    def update_age(self, hive, population, currentDate):
         self.age += 1
-        return not (0.01389*self.age > np.random.rand())
+        death_chance = 0.0014
+
+        if death_chance*self.age > np.random.rand():
+            hive.total_death += 1
+            return False
+        else:
+            return True
 
 class Scout(Bee):
     def __init__(self, hive_location):
