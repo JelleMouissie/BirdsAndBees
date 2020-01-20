@@ -27,6 +27,10 @@ class Environment(Model):
 
     def draw(self):
         print(self.hives[0].GetStatus())
+        pophistory = self.hives[0].Getpophistory()
+        deathhistory = self.hives[0].Getdeathhistory()
+        plt.plot(range(len(pophistory)), pophistory)
+        plt.plot(range(len(deathhistory)), deathhistory)
         print(self.currentDate)
         pass
         # plt.cla()
@@ -49,6 +53,7 @@ class Environment(Model):
         self.draw()
         for hive in self.hives:
             hive.incrementYear()
+        input("new year new me")
 
     def getDateAsString(self):
         return "day: " + str(self.currentDate[0]) + "year: " + str(self.currentDate[1])
