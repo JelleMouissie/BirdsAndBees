@@ -25,7 +25,7 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(5, 5, 1000, 1000, 1, 1)]
+        return [Hive(5, 5, 10000, 1000, 1, 1)]
 
     def draw(self):
         print(self.hives[0].GetStatus())

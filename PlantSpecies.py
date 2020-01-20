@@ -16,4 +16,4 @@ class PlantSpecies:
 
 
 def GeneratePlantSpecies():
-    return PlantSpecies(10, 2, 1, [1, 180])
+    return PlantSpecies(1000, 2, 1, [1, 180])

@@ -1,4 +1,5 @@
 from Bee import Scout, Bee
+import numpy as np
 
 FORAGERS_TO_POPULATION = 1/3
 SCOUTS_TO_FORAGERS = 1/10
@@ -11,9 +12,14 @@ class Hive:
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.population =  start_population
+        self.populationhistory = []
+        self.deathhistory = []
         self.growth_rate = growth_rate
         self.consumption_rate = consumption_rate
         self.food_level = start_food
+        self.total_death = 0
+        self.total_born = start_population
+        self.foodratio = 1
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
@@ -36,7 +42,7 @@ class Hive:
 
     def starvation(self, shortage):
         print(shortage)
-        percentageDeath = (shortage / self.population)
+        percentageDeath = (shortage / self.population) / 2
         self.population -= self.population * percentageDeath
         self.scouts = self.scouts[0 : len(self.scouts) - int(len(self.scouts) * percentageDeath)]
         self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]
@@ -45,15 +51,27 @@ class Hive:
 
     #Increase population and determine new amount of foragers and scouts.
     def update_population(self, currentDate):
-        # f = 5.8
-        # d = 0.014
-        # growth = 1 + (-2*f*(currentDate[0]-110))/self.population + 3*d
-        k = 0.00000017
-        max_pop = 300000
-        growth = (k * self.population * (max_pop - self.population))
+        maxpop = 200000
+        startpop = 10000
+        # startdeath = 0.014*startpop
+        # maxdeath = 170000
+        k = 25*10**-8
+        # l = 1.65*k
 
+        # Use logistic population distribution to simulate 'natural' growth rate, given
+        # time in season. Scale natural growth rate by food ratio.
+        tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*currentDate[0])))
+        next_tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*(currentDate[0]+1))))
 
-        self.population = int(self.population + growth) #TODO: implement actual growth based on food supplies                          !!!!
+        # print(tot_pop)
+        # print(next_tot_pop)
+        # tot_death = startdeath*(maxdeath/(startdeath+(maxdeath-startdeath)*np.exp(-maxdeath*l*(currentDate[0]+25))))
+        # print(tot_pop)
+        # print(tot_death)
+
+        growth = 1 + self.foodratio*(next_tot_pop - tot_pop)/next_tot_pop
+        # print(f'growth: {growth}')
+        self.population = int(self.population*growth) #TODO: implement actual growth based on food supplies                          !!!!
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
@@ -94,9 +112,9 @@ class Hive:
             start_slice = end_slice
 
     #Kill Bees >:)
-    def update_bee_age(self):
-        alive_scouts = [scout for scout in self.scouts if scout.update_age()]
-        alive_employees = [employee for employee in self.employees if employee.update_age()]
+    def update_bee_age(self, population, currentDate):
+        alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate)]
+        alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate)]
         num_dead = len(self.scouts) - len(alive_scouts) + len(self.employees) - len(alive_employees)
 
         # print(self.population)
@@ -106,7 +124,7 @@ class Hive:
         self.employees = alive_employees
 
     #First update scouts. If scout has a source, gather food with employee bees. Finally update age of all bees.
-    def update_bees(self, grid):
+    def update_bees(self, grid, population, currentDate):
         updated_scouts = []
 
         for scout in self.scouts:
@@ -114,7 +132,7 @@ class Hive:
                 updated_scouts += [scout]
 
         self.gather_food(updated_scouts, grid)
-        self.update_bee_age()
+        self.update_bee_age(population, currentDate)
         self.gather_group_id = 0
 
 
@@ -122,10 +140,19 @@ class Hive:
     def update(self, grid, currentDate):
         self.update_food_level()
         self.update_population(currentDate)
-        self.update_bees(grid)
+        self.update_bees(grid, self.population, currentDate)
+        self.populationhistory.append(self.population)
+        self.deathhistory.append(self.total_death)
+
 
     def incrementYear(self):
         pass
 
     def GetStatus(self):
         return [self.population, len(self.scouts), len(self.employees)]
+
+    def Getpophistory(self):
+        return self.populationhistory
+
+    def Getdeathhistory(self):
+        return self.deathhistory
