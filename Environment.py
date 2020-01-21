@@ -11,7 +11,6 @@ from Hive import Hive
 class Environment(Model):
     def __init__(self):
         Model.__init__(self)
-        self.make_param('Wepsen', 0)
         self.make_param('x', 10)
         self.make_param('y', 10)
         self.make_param('diversity', 2)
@@ -25,16 +24,17 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(5, 5, 10000, 1000, 1, 1)]
+        return [Hive(5, 5, 10000, 10000, 1, 1)]
 
     def draw(self):
         print(self.hives[0].GetStatus())
-        pophistory = self.hives[0].Getpophistory()
-        deathhistory = self.hives[0].Getdeathhistory()
-        plt.plot(range(len(pophistory)), pophistory)
-        plt.plot(range(len(deathhistory)), deathhistory)
+        # pophistory = self.hives[0].Getpophistory()
+        # deathhistory = self.hives[0].Getdeathhistory()
+        # plt.plot(range(len(pophistory)), pophistory)
+        # plt.plot(range(len(deathhistory)), deathhistory)
         print(self.currentDate)
-        self.plot()
+        self.plotgrid()
+        self.plotpop()
         pass
         # plt.cla()
 
@@ -62,12 +62,20 @@ class Environment(Model):
     def getDateAsString(self):
         return "day: " + str(self.currentDate[0]) + "year: " + str(self.currentDate[1])
 
-    def plot(self):
+    def plotgrid(self):
         plt.ion()
         plt.cla()
         df = pd.DataFrame(self.grid.GetFoodMatrix())
         plt.table(cellText=df.values, loc='center')
+        plt.show()
 
+    def plotpop(self):
+        plt.cla()
+        pophistory = self.hives[0].Getpophistory()
+        deathhistory = self.hives[0].Getdeathhistory()
+        plt.plot(range(len(deathhistory)), deathhistory)
+        plt.plot(range(len(pophistory)), pophistory)
+        plt.show()
 
 
 if __name__ == "__main__":
