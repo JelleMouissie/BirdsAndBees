@@ -23,7 +23,6 @@ class Cell:
             currentindex = randomindexes[i]
             self.vegitation[plantSpecies[i]] = [amount, amount * plantSpecies[i].GetNutrition()]
 
-
     def GetVegitation(self):
         return self.vegitation
 
@@ -53,10 +52,32 @@ class Cell:
                 self.vegitation[plant][1] = 0
         return gatheredFood
 
-
-
     def getFoodLeft(self):
         foodLeft = 0
         for plant in self.vegitation.keys():
             foodLeft += self.vegitation[plant][1]
         return foodLeft
+
+    def incrementYear(self):
+        reproductions = []
+        totalReproduction = 0
+        for plant in self.vegitation.keys():
+            foodAmount = plant.GetNutrition() * self.vegitation[plant][0]
+            eatenPercentage = (foodAmount - self.vegitation[plant][1]) / foodAmount
+            reproductions += [eaten * plant.GetReproduction()]
+            totalReproduction += (eaten * plant.GetReproduction())
+
+        if totalReproduction > 100:
+            plantsPerReproduction = 100 / totalReproduction
+        else:
+            plantsPerReproduction = 1
+
+        for index, plant in enumerate(self.vegitation.keys()):
+            self.vegitation[plant][0] = plantsPerReproduction * reproductions[index]
+            self.vegitation[plant][1] = self.vegitation[plant][0] * plant.GetNutrition
+
+        print(self.vegitation)
+
+
+
+pass

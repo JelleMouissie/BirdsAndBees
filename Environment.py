@@ -56,6 +56,7 @@ class Environment(Model):
         self.draw()
         for hive in self.hives:
             hive.incrementYear()
+            self.grid.incrementYear()
         input("new year new me")
 
     def getDateAsString(self):

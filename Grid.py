@@ -27,3 +27,8 @@ class Grid:
                 foodrow += [cell.getFoodLeft()]
             matrix += [foodrow]
         return matrix
+
+    def incrementYear(self):
+        for row in self.cells:
+            for cell in row:
+                cell.incrementYear()

@@ -14,6 +14,9 @@ class PlantSpecies:
     def GetAttractiveNess(self):
         return self.attractiveness
 
+    def GetReproduction(self):
+        return self.reproduction_coefficient
+
 
 def GeneratePlantSpecies():
     return PlantSpecies(1000, 2, 1, [1, 180])

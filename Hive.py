@@ -146,7 +146,17 @@ class Hive:
 
 
     def incrementYear(self):
-        pass
+        a = 1/3
+        b = self.food_level / (food_per_bee * 165 * self.population)
+        factor = min(a, b)
+
+        self.scouts = []
+        self.employees = []
+        self.population *= factor
+
+        num_foragers = int(FORAGERS_TO_POPULATION * self.population)
+        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
+        self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
 
     def GetStatus(self):
         return [self.population, len(self.scouts), len(self.employees)]
