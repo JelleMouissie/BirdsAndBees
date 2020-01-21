@@ -1,8 +1,17 @@
 from Bee import Scout, Bee
 import numpy as np
 
+"""
+Project Computational Science
+Sander van Oostveen, Jelle Mouissie and Joos Akkerman
+
+This file defines the class Hive, which contains the functions for population
+development.
+"""
+
 FORAGERS_TO_POPULATION = 1/3
 SCOUTS_TO_FORAGERS = 1/10
+food_per_bee = 0.25
 
 PRIORITY_BIAS = 2     #TODO: Decide Bias in determining priority of found food source.
 
@@ -19,7 +28,7 @@ class Hive:
         self.food_level = start_food
         self.total_death = 0
         self.total_born = start_population
-        self.foodratio = 1
+        self.growthscale = 1
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
@@ -29,29 +38,31 @@ class Hive:
 
     #Do stuff with food?
     def update_food_level(self):
-        food_per_bee = 0.2
+        # food_per_bee = 0.2
         needed_food = food_per_bee * self.population
         print("voor vreten", self.food_level, "Needed food:", needed_food)
         if (needed_food > self.food_level):
             needed_food -= self.food_level
             self.food_level = 0
             self.starvation(needed_food / food_per_bee)
+            print(f'percentageDeath: {((needed_food / food_per_bee)/self.population)/2}')
         else :
             self.food_level -= needed_food
         print("na vreten", self.food_level)
 
-    def starvation(self, shortage):
-        print(shortage)
-        percentageDeath = (shortage / self.population) / 2
-        self.population -= self.population * percentageDeath
-        self.scouts = self.scouts[0 : len(self.scouts) - int(len(self.scouts) * percentageDeath)]
-        self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]
 
+    def starvation(self, shortage):
+        pass
+        # print(shortage)
+        # percentageDeath = (shortage / self.population) / 2
+        # self.population -= self.population * percentageDeath
+        # self.scouts = self.scouts[0 : len(self.scouts) - int(len(self.scouts) * percentageDeath)]
+        # self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]
 
 
     #Increase population and determine new amount of foragers and scouts.
     def update_population(self, currentDate):
-        maxpop = 200000
+        maxpop = 2*10**5
         startpop = 10000
         # startdeath = 0.014*startpop
         # maxdeath = 170000
@@ -69,7 +80,7 @@ class Hive:
         # print(tot_pop)
         # print(tot_death)
 
-        growth = 1 + self.foodratio*(next_tot_pop - tot_pop)/next_tot_pop
+        growth = 1 + self.growthscale*(next_tot_pop - tot_pop)/next_tot_pop
         # print(f'growth: {growth}')
         self.population = int(self.population*growth) #TODO: implement actual growth based on food supplies                          !!!!
 
@@ -136,6 +147,14 @@ class Hive:
         self.gather_group_id = 0
 
 
+    def update_growthscale(self):
+        if self.population != 0:
+            f = self.food_level/(food_per_bee*self.population)
+            return min([f, 1])
+        else:
+            return 1
+
+
     #Update food levels, bee populations and perform bee actions
     def update(self, grid, currentDate):
         self.update_food_level()
@@ -143,6 +162,7 @@ class Hive:
         self.update_bees(grid, self.population, currentDate)
         self.populationhistory.append(self.population)
         self.deathhistory.append(self.total_death)
+        self.growthscale = self.update_growthscale()
 
 
     def incrementYear(self):
