@@ -13,7 +13,7 @@ class Environment(Model):
         Model.__init__(self)
         self.make_param('x', 10)
         self.make_param('y', 10)
-        self.make_param('diversity', 2)
+        self.make_param('diversity', 9)
 
         self.hives =  self.makeHives()
 

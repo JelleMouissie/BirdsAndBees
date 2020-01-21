@@ -33,28 +33,31 @@ class Hive:
         self.GeneratePopulation()
 
     def GeneratePopulation(self):
+        """
+        Generates population of forager bees (CA)
+        """
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         self.scouts = [Scout([self.pos_x,self.pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
 
 
-
-    #Do stuff with food?
     def update_food_level(self):
-        # food_per_bee = 0.2
+        """
+        Updates food level in hive and initiates starvation in case of shortage
+        """
         needed_food = FOOD_PER_BEE * self.population
-        # print("voor vreten", self.food_level, "Needed food:", needed_food)
         if (needed_food > self.food_level):
             needed_food -= self.food_level
             self.food_level = 0
             self.starvation(needed_food / FOOD_PER_BEE)
-            # print(f'percentageDeath: {((needed_food / FOOD_PER_BEE)/self.population)/2}')
         else :
             self.food_level -= needed_food
-        # print("na vreten", self.food_level)
 
 
     def starvation(self, shortage):
+        """
+        Starves portion of population in case of food shortage.
+        """
         pass
         # print(shortage)
         # percentageDeath = (shortage / self.population) / 2
@@ -63,28 +66,20 @@ class Hive:
         # self.employees = self.employees[0 : len(self.employees) - int(len(self.employees) * percentageDeath)]
 
 
-    #Increase population and determine new amount of foragers and scouts.
     def update_population(self, currentDate):
+        """
+        Increase population and determine new amount of foragers and scouts.
+        """
         maxpop = 2*10**5
         startpop = 10000
-        # startdeath = 0.014*startpop
-        # maxdeath = 170000
         k = 25*10**-8
-        # l = 1.65*k
 
         # Use logistic population distribution to simulate 'natural' growth rate, given
         # time in season. Scale natural growth rate by food ratio.
         tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*currentDate[0])))
         next_tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*(currentDate[0]+1))))
 
-        # print(tot_pop)
-        # print(next_tot_pop)
-        # tot_death = startdeath*(maxdeath/(startdeath+(maxdeath-startdeath)*np.exp(-maxdeath*l*(currentDate[0]+25))))
-        # print(tot_pop)
-        # print(tot_death)
-
         growth = 1 + self.growthscale*(next_tot_pop - tot_pop)/next_tot_pop
-        # print(f'growth: {growth}')
         self.population = int(self.population*growth) #TODO: implement actual growth based on food supplies                          !!!!
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
@@ -101,8 +96,10 @@ class Hive:
             self.employees.append(Bee())
 
 
-    #Gather unemployed bees based on priority, and collectivly gather food
-    def gather_food(self, scouts, grid):
+    def gather_food(self, scouts, grid, currentDate):
+        """
+        Gather unemployed bees based on priority, and collectivly gather food
+        """
         priorities = []
         totalpriority = 1
         for scout in scouts:
@@ -118,39 +115,51 @@ class Hive:
 
         for index, scout in enumerate(scouts):
             end_slice = start_slice + int(priorities[index] * beesPerPrio)
-            # print(end_slice)/
             gather_group = self.employees[start_slice : end_slice]
-            self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)
-            scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness()
+            self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group, currentDate)
+            scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness(currentDate)
+
+            # increase death change if distance to food source is long
+            age_change = (0.5/150)*scout.hive_distance*10
+            for employee in gather_group:
+                employee.age += age_change
 
             start_slice = end_slice
 
-    #Kill Bees >:)
     def update_bee_age(self, population, currentDate):
+        """
+        Updates age bees and determines which bees will die.
+        """
         alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate)]
         alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate)]
         num_dead = len(self.scouts) - len(alive_scouts) + len(self.employees) - len(alive_employees)
 
-        # print(self.population)
         self.population -= num_dead
-        # print(self.population)
         self.scouts = alive_scouts
         self.employees = alive_employees
 
-    #First update scouts. If scout has a source, gather food with employee bees. Finally update age of all bees.
+
     def update_bees(self, grid, population, currentDate):
+        """
+        First update scouts. If scout has a source, gather food with employee
+        bees. Finally update age of all bees.
+        """
         updated_scouts = []
 
         for scout in self.scouts:
-            if scout.update(grid):
+            if scout.update(grid, currentDate):
                 updated_scouts += [scout]
 
-        self.gather_food(updated_scouts, grid)
+        self.gather_food(updated_scouts, grid, currentDate)
         self.update_bee_age(population, currentDate)
         self.gather_group_id = 0
 
 
     def update_growthscale(self):
+        """
+        Updates scale by which natural growth rate is scaled, based on available
+        food supply.
+        """
         if self.population != 0:
             f = self.food_level/(FOOD_PER_BEE*self.population)
             return min([f, 1])
@@ -158,8 +167,10 @@ class Hive:
             return 1
 
 
-    #Update food levels, bee populations and perform bee actions
     def update(self, grid, currentDate):
+        """
+        Update food levels, bee populations and perform bee actions.
+        """
         self.update_food_level()
         self.update_population(currentDate)
         self.update_bees(grid, self.population, currentDate)
@@ -169,6 +180,10 @@ class Hive:
 
 
     def incrementYear(self):
+        """
+        Increments year and decreases bee population in winter period based
+        on available food supply.
+        """
         print("voor de winter:", self.food_level)
         a = 0.37222
         # a = 1/3
@@ -180,7 +195,6 @@ class Hive:
         print("na de winter:", self.food_level)
         print(factor)
         self.GeneratePopulation()
-
 
 
     def GetStatus(self):

@@ -4,6 +4,13 @@ import numpy as np
 
 FOOD_BIAS = 0
 
+"""
+Project Computational Science
+Sander van Oostveen, Jelle Mouissie and Joos Akkerman
+
+This file defines the class Bee, which contains functions for bee behaviour.
+"""
+
 class Bee:
     def __init__(self):
         self.age = 0
@@ -33,18 +40,18 @@ class Scout(Bee):
 
 
     #Update scout for 1 simulation step. If employed, do nothing (Handled in Hive.py)
-    def update(self, grid):
+    def update(self, grid, currentDate):
         if self.food_value > FOOD_BIAS:
             return True
-        return self.search(grid)
+        return self.search(grid, currentDate)
 
 
-    def search(self, grid):
+    def search(self, grid, currentDate):
         xlim, ylim  = grid.Getlimits()
         self.pos_x = random.randint(0,xlim) - 1
         self.pos_y = random.randint(0,ylim) - 1
 
-        tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness()
+        tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness(currentDate)
         if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.  gather_food           !!!
             self.food_location += [self.pos_x, self.pos_y]
             self.food_value = tile_value

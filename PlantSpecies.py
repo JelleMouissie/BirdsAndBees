@@ -17,6 +17,20 @@ class PlantSpecies:
     def GetReproduction(self):
         return self.reproduction_coefficient
 
+    def IsBlooming(self, currentDate):
+        return currentDate[0] >= self.bloom_period[0] and currentDate[0] <= self.bloom_period[1]
 
-def GeneratePlantSpecies():
-    return PlantSpecies(10000, 2, 1, [1, 180])
+
+def GeneratePlantSpecies(species):
+    all_plants = {0: [250, 2, 1, [1, 40]],
+                    1: [250, 2, 1, [20, 60]],
+                    2: [250, 2, 1, [40, 80]],
+                    3: [250, 2, 1, [60, 100]],
+                    4: [250, 2, 1, [80, 120]],
+                    5: [250, 2, 1, [100, 140]],
+                    6: [250, 2, 1, [120, 160]],
+                    7: [250, 2, 1, [140, 180]],
+                    8: [250, 2, 1, [160, 200]],
+                    9: [250, 2, 1, [180, 200]]}
+    plant = all_plants[species]
+    return PlantSpecies(plant[0], plant[1], plant[2], plant[3])
