@@ -63,9 +63,10 @@ class Cell:
         totalReproduction = 0
         for plant in self.vegitation.keys():
             foodAmount = plant.GetNutrition() * self.vegitation[plant][0]
-            eatenPercentage = (foodAmount - self.vegitation[plant][1]) / foodAmount
-            reproductions += [eaten * plant.GetReproduction()]
-            totalReproduction += (eaten * plant.GetReproduction())
+            print(foodAmount)
+            reproductionCoefficient = ((foodAmount - self.vegitation[plant][1]) / foodAmount) * plant.GetReproduction()
+            reproductions += [reproductionCoefficient]
+            totalReproduction += reproductionCoefficient
 
         if totalReproduction > 100:
             plantsPerReproduction = 100 / totalReproduction
@@ -74,7 +75,7 @@ class Cell:
 
         for index, plant in enumerate(self.vegitation.keys()):
             self.vegitation[plant][0] = plantsPerReproduction * reproductions[index]
-            self.vegitation[plant][1] = self.vegitation[plant][0] * plant.GetNutrition
+            self.vegitation[plant][1] = self.vegitation[plant][0] * plant.GetNutrition()
 
         print(self.vegitation)
 

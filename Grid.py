@@ -31,4 +31,5 @@ class Grid:
     def incrementYear(self):
         for row in self.cells:
             for cell in row:
-                cell.incrementYear()
+                pass
+                # cell.incrementYear()

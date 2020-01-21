@@ -72,8 +72,8 @@ class Environment(Model):
     def plotpop(self):
         plt.cla()
         pophistory = self.hives[0].Getpophistory()
-        deathhistory = self.hives[0].Getdeathhistory()
-        plt.plot(range(len(deathhistory)), deathhistory)
+        # deathhistory = self.hives[0].Getdeathhistory()
+        # plt.plot(range(len(deathhistory)), deathhistory)
         plt.plot(range(len(pophistory)), pophistory)
         plt.show()
 

@@ -11,7 +11,7 @@ development.
 
 FORAGERS_TO_POPULATION = 1/3
 SCOUTS_TO_FORAGERS = 1/10
-food_per_bee = 0.25
+FOOD_PER_BEE = 0.2
 
 PRIORITY_BIAS = 2     #TODO: Decide Bias in determining priority of found food source.
 
@@ -30,25 +30,28 @@ class Hive:
         self.total_born = start_population
         self.growthscale = 1
 
+        self.GeneratePopulation()
+
+    def GeneratePopulation(self):
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
-        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
+        self.scouts = [Scout([self.pos_x,self.pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
-        self.gather_group_id = 0
+
 
 
     #Do stuff with food?
     def update_food_level(self):
         # food_per_bee = 0.2
-        needed_food = food_per_bee * self.population
-        print("voor vreten", self.food_level, "Needed food:", needed_food)
+        needed_food = FOOD_PER_BEE * self.population
+        # print("voor vreten", self.food_level, "Needed food:", needed_food)
         if (needed_food > self.food_level):
             needed_food -= self.food_level
             self.food_level = 0
-            self.starvation(needed_food / food_per_bee)
-            print(f'percentageDeath: {((needed_food / food_per_bee)/self.population)/2}')
+            self.starvation(needed_food / FOOD_PER_BEE)
+            # print(f'percentageDeath: {((needed_food / FOOD_PER_BEE)/self.population)/2}')
         else :
             self.food_level -= needed_food
-        print("na vreten", self.food_level)
+        # print("na vreten", self.food_level)
 
 
     def starvation(self, shortage):
@@ -149,7 +152,7 @@ class Hive:
 
     def update_growthscale(self):
         if self.population != 0:
-            f = self.food_level/(food_per_bee*self.population)
+            f = self.food_level/(FOOD_PER_BEE*self.population)
             return min([f, 1])
         else:
             return 1
@@ -166,17 +169,19 @@ class Hive:
 
 
     def incrementYear(self):
-        a = 1/3
-        b = self.food_level / (food_per_bee * 165 * self.population)
+        print("voor de winter:", self.food_level)
+        a = 0.37222
+        # a = 1/3
+        b = self.food_level / (FOOD_PER_BEE * 165 * max(self.population, 1))
         factor = min(a, b)
 
-        self.scouts = []
-        self.employees = []
-        self.population *= factor
+        self.population = int(self.population * factor)
+        self.food_level -= self.population * 165 * FOOD_PER_BEE
+        print("na de winter:", self.food_level)
+        print(factor)
+        self.GeneratePopulation()
 
-        num_foragers = int(FORAGERS_TO_POPULATION * self.population)
-        self.scouts = [Scout([pos_x,pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
-        self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
+
 
     def GetStatus(self):
         return [self.population, len(self.scouts), len(self.employees)]
