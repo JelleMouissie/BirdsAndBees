@@ -17,9 +17,9 @@ class Bee:
         self.cargo = 0
 
     #Determine if bee dies, return False. Else if bee lives, increase age and return True
-    def update_age(self, hive, population, currentDate):
+    def update_age(self, hive, population, currentDate, predators):
         self.age += 1
-        death_chance = 0.0014
+        death_chance = 0.0014 + predators
 
         if death_chance*self.age > np.random.rand():
             hive.total_death += 1

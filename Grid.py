@@ -33,3 +33,12 @@ class Grid:
             for cell in row:
                 pass
                 # cell.incrementYear()
+
+    def drought(self):
+        for row in self.cells:
+            for cell in row:
+                pass
+                cell.drought()
+
+    def ForestFire(self, x, y):
+        self.cells[x][y].burn()

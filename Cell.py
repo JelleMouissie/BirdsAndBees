@@ -82,6 +82,8 @@ class Cell:
 
         print(self.vegitation)
 
+    def drought(self):
+        pass # decrementeer voedsel want droogte
 
-
-pass
+    def burn(self):
+        pass # sererely decrease plants

@@ -17,7 +17,7 @@ PRIORITY_BIAS = 2     #TODO: Decide Bias in determining priority of found food s
 
 #Maintain population and food levels, spawn new bees as needed
 class Hive:
-    def __init__(self, pos_x, pos_y, start_population, start_food, growth_rate, consumption_rate):
+    def __init__(self, pos_x, pos_y, start_population, start_food, growth_rate, consumption_rate, predators):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.population =  start_population
@@ -29,6 +29,7 @@ class Hive:
         self.total_death = 0
         self.total_born = start_population
         self.growthscale = 1
+        self.predators = predators
 
         self.GeneratePopulation()
 
@@ -80,7 +81,7 @@ class Hive:
         next_tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*(currentDate[0]+1))))
 
         growth = 1 + self.growthscale*(next_tot_pop - tot_pop)/next_tot_pop
-        self.population = int(self.population*growth) #TODO: implement actual growth based on food supplies                          !!!!
+        self.population = int(self.population*growth)
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
@@ -109,9 +110,6 @@ class Hive:
 
         beesPerPrio = len(self.employees) / totalpriority
         start_slice = 0
-        # print(priorities)
-        # print(beesPerPrio)
-        # print(len(self.employees))
 
         for index, scout in enumerate(scouts):
             end_slice = start_slice + int(priorities[index] * beesPerPrio)
@@ -130,8 +128,8 @@ class Hive:
         """
         Updates age bees and determines which bees will die.
         """
-        alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate)]
-        alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate)]
+        alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate, self.predators)]
+        alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate, self.predators)]
         num_dead = len(self.scouts) - len(alive_scouts) + len(self.employees) - len(alive_employees)
 
         self.population -= num_dead
@@ -186,7 +184,6 @@ class Hive:
         """
         print("voor de winter:", self.food_level)
         a = 0.37222
-        # a = 1/3
         b = self.food_level / (FOOD_PER_BEE * 165 * max(self.population, 1))
         factor = min(a, b)
 
