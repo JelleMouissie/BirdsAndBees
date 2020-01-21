@@ -17,7 +17,7 @@ PRIORITY_BIAS = 2     #TODO: Decide Bias in determining priority of found food s
 
 #Maintain population and food levels, spawn new bees as needed
 class Hive:
-    def __init__(self, pos_x, pos_y, start_population, start_food, growth_rate, consumption_rate):
+    def __init__(self, pos_x, pos_y, start_population, start_food, growth_rate, consumption_rate, predators):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.population =  start_population
@@ -29,6 +29,7 @@ class Hive:
         self.total_death = 0
         self.total_born = start_population
         self.growthscale = 1
+        self.predators = predators
 
         self.GeneratePopulation()
 
@@ -37,21 +38,15 @@ class Hive:
         self.scouts = [Scout([self.pos_x,self.pos_y]) for _ in range(int(SCOUTS_TO_FORAGERS * num_foragers))]
         self.employees = [Bee() for _ in range(num_foragers - len(self.scouts))]
 
-
-
     #Do stuff with food?
     def update_food_level(self):
-        # food_per_bee = 0.2
         needed_food = FOOD_PER_BEE * self.population
-        # print("voor vreten", self.food_level, "Needed food:", needed_food)
         if (needed_food > self.food_level):
             needed_food -= self.food_level
             self.food_level = 0
             self.starvation(needed_food / FOOD_PER_BEE)
-            # print(f'percentageDeath: {((needed_food / FOOD_PER_BEE)/self.population)/2}')
         else :
             self.food_level -= needed_food
-        # print("na vreten", self.food_level)
 
 
     def starvation(self, shortage):
@@ -67,25 +62,15 @@ class Hive:
     def update_population(self, currentDate):
         maxpop = 2*10**5
         startpop = 10000
-        # startdeath = 0.014*startpop
-        # maxdeath = 170000
         k = 25*10**-8
-        # l = 1.65*k
 
         # Use logistic population distribution to simulate 'natural' growth rate, given
         # time in season. Scale natural growth rate by food ratio.
         tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*currentDate[0])))
         next_tot_pop = startpop*(maxpop/(startpop+(maxpop-startpop)*np.exp(-maxpop*k*(currentDate[0]+1))))
 
-        # print(tot_pop)
-        # print(next_tot_pop)
-        # tot_death = startdeath*(maxdeath/(startdeath+(maxdeath-startdeath)*np.exp(-maxdeath*l*(currentDate[0]+25))))
-        # print(tot_pop)
-        # print(tot_death)
-
         growth = 1 + self.growthscale*(next_tot_pop - tot_pop)/next_tot_pop
-        # print(f'growth: {growth}')
-        self.population = int(self.population*growth) #TODO: implement actual growth based on food supplies                          !!!!
+        self.population = int(self.population*growth)
 
         num_foragers = int(FORAGERS_TO_POPULATION * self.population)
         num_scouts = int(num_foragers * SCOUTS_TO_FORAGERS)
@@ -112,13 +97,9 @@ class Hive:
 
         beesPerPrio = len(self.employees) / totalpriority
         start_slice = 0
-        # print(priorities)
-        # print(beesPerPrio)
-        # print(len(self.employees))
 
         for index, scout in enumerate(scouts):
             end_slice = start_slice + int(priorities[index] * beesPerPrio)
-            # print(end_slice)/
             gather_group = self.employees[start_slice : end_slice]
             self.food_level += grid.Get(scout.food_location[0], scout.food_location[1]).GatherFood(gather_group)
             scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness()
@@ -127,13 +108,11 @@ class Hive:
 
     #Kill Bees >:)
     def update_bee_age(self, population, currentDate):
-        alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate)]
-        alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate)]
+        alive_scouts = [scout for scout in self.scouts if scout.update_age(self, population, currentDate, self.predators)]
+        alive_employees = [employee for employee in self.employees if employee.update_age(self, population, currentDate, self.predators)]
         num_dead = len(self.scouts) - len(alive_scouts) + len(self.employees) - len(alive_employees)
 
-        # print(self.population)
         self.population -= num_dead
-        # print(self.population)
         self.scouts = alive_scouts
         self.employees = alive_employees
 
@@ -157,7 +136,6 @@ class Hive:
         else:
             return 1
 
-
     #Update food levels, bee populations and perform bee actions
     def update(self, grid, currentDate):
         self.update_food_level()
@@ -171,7 +149,6 @@ class Hive:
     def incrementYear(self):
         print("voor de winter:", self.food_level)
         a = 0.37222
-        # a = 1/3
         b = self.food_level / (FOOD_PER_BEE * 165 * max(self.population, 1))
         factor = min(a, b)
 

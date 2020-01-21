@@ -11,9 +11,13 @@ from Hive import Hive
 class Environment(Model):
     def __init__(self):
         Model.__init__(self)
-        self.make_param('x', 10)
-        self.make_param('y', 10)
+        self.make_param('x', 30)
+        self.make_param('y', 30)
         self.make_param('diversity', 2)
+        self.make_param('fireLocs', [[0,1],[10,15]])
+        self.make_param('fireDates', [100,150])
+        self.make_param('predators', 0.0000)
+        self.make_param('droughts', [])
 
         self.hives =  self.makeHives()
 
@@ -24,7 +28,7 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(5, 5, 10000, 10000, 1, 1)]
+        return [Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
 
     def draw(self):
         print(self.hives[0].GetStatus())
@@ -35,7 +39,6 @@ class Environment(Model):
         print(self.currentDate)
         self.plotgrid()
         self.plotpop()
-        pass
         # plt.cla()
 
     def step(self):
@@ -45,6 +48,7 @@ class Environment(Model):
 
 
     def incrementDate(self):
+        self.CheckForForestFire()
         if self.currentDate[0] < 200:
             self.currentDate[0] += 1
         else:
@@ -52,11 +56,19 @@ class Environment(Model):
             self.currentDate[1] += 1
             self.incrementYear()
 
+    def CheckForForestFire(self):
+        for index, date in enumerate(self.fireDates):
+            if date == self.currentDate[0]:
+                self.grid.ForestFire(self.fireLocs[index][0], self.fireLocs[index][1])
+
     def incrementYear(self):
         self.draw()
         for hive in self.hives:
             hive.incrementYear()
             self.grid.incrementYear()
+            if (self.currentDate[1] in self.droughts):
+                self.grid.drought()
+
         input("new year new me")
 
     def getDateAsString(self):
