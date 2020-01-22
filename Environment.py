@@ -28,7 +28,8 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
+        return [Hive(30, 30, 10000, 10000, 1, 1, self.predators),
+                Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
 
     def draw(self):
         print(self.hives[0].GetStatus())
@@ -86,10 +87,13 @@ class Environment(Model):
 
     def plotpop(self):
         plt.cla()
-        pophistory = self.hives[0].Getpophistory()
-        # deathhistory = self.hives[0].Getdeathhistory()
-        # plt.plot(range(len(deathhistory)), deathhistory)
-        plt.plot(range(len(pophistory)), pophistory)
+        for hive in self.hives:
+            pophistory = hive.Getpophistory()
+            plt.plot(range(len(pophistory)), pophistory)
+        # pophistory = self.hives[0].Getpophistory()
+        # # deathhistory = self.hives[0].Getdeathhistory()
+        # # plt.plot(range(len(deathhistory)), deathhistory)
+        # plt.plot(range(len(pophistory)), pophistory)
         plt.show()
 
 
