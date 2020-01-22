@@ -65,22 +65,27 @@ class Cell:
         reproductions = []
         totalReproduction = 0
         for plant in self.vegitation.keys():
-            foodAmount = plant.GetNutrition() * self.vegitation[plant][0]
-            print(foodAmount)
-            reproductionCoefficient = ((foodAmount - self.vegitation[plant][1]) / foodAmount) * plant.GetReproduction()
+            foodAmount = plant.GetNutrition() * self.vegitation[plant][0] + 1
+            # print("leftover", self.vegitation[plant][1], "max", foodAmount)
+            # print("reproductionCoefficient", (foodAmount - self.vegitation[plant][1]) / foodAmount)
+            reproductionCoefficient = ((foodAmount - self.vegitation[plant][1]) / foodAmount + 0.3) * plant.GetReproduction() * self.vegitation[plant][0]
             reproductions += [reproductionCoefficient]
             totalReproduction += reproductionCoefficient
+
 
         if totalReproduction > 100:
             plantsPerReproduction = 100 / totalReproduction
         else:
             plantsPerReproduction = 1
 
-        for index, plant in enumerate(self.vegitation.keys()):
-            self.vegitation[plant][0] = plantsPerReproduction * reproductions[index]
-            self.vegitation[plant][1] = self.vegitation[plant][0] * plant.GetNutrition()
+        # print(reproductions)
+        # print(plantsPerReproduction)
 
-        print(self.vegitation)
+        for index, plant in enumerate(self.vegitation.keys()):
+            self.vegitation[plant][0] = int(plantsPerReproduction * reproductions[index])
+            self.vegitation[plant][1] = int(self.vegitation[plant][0] * plant.GetNutrition())
+
+        # print(self.vegitation)
 
     def drought(self):
         pass # decrementeer voedsel want droogte

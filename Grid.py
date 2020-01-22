@@ -32,7 +32,7 @@ class Grid:
         for row in self.cells:
             for cell in row:
                 pass
-                # cell.incrementYear()
+                cell.incrementYear()
 
     def drought(self):
         for row in self.cells:

@@ -14,8 +14,8 @@ class Environment(Model):
         self.make_param('x', 30)
         self.make_param('y', 30)
         self.make_param('diversity', 9)
-        self.make_param('fireLocs', [[0,1],[10,15]])
-        self.make_param('fireDates', [100,150])
+        self.make_param('fireLocs', [[0,1]])
+        self.make_param('fireDates', [100])
         self.make_param('predators', 0.0000)
         self.make_param('droughts', [])
 
@@ -38,23 +38,26 @@ class Environment(Model):
         # plt.plot(range(len(deathhistory)), deathhistory)
         print(self.currentDate)
         self.plotgrid()
-        self.plotpop()
+        # self.plotpop()
         # plt.cla()
 
     def step(self):
-        self.incrementDate()
+        year = self.incrementDate()
         for hive in self.hives:
             hive.update(self.grid, self.currentDate)      #TODO: Pass Grid object to retrieve plant information from Scout Bee location in Scout.update(Grid)
+        return year
 
 
     def incrementDate(self):
         self.CheckForForestFire()
         if self.currentDate[0] < 200:
             self.currentDate[0] += 1
+            return False
         else:
             self.currentDate[0] = 0
             self.currentDate[1] += 1
             self.incrementYear()
+            return True
 
     def CheckForForestFire(self):
         for index, date in enumerate(self.fireDates):
@@ -69,14 +72,14 @@ class Environment(Model):
             if (self.currentDate[1] in self.droughts):
                 self.grid.drought()
 
-        input("new year new me")
-
     def getDateAsString(self):
         return "day: " + str(self.currentDate[0]) + "year: " + str(self.currentDate[1])
 
     def plotgrid(self):
         plt.ion()
         plt.cla()
+        # plt.figure()
+        # plt.plot()
         df = pd.DataFrame(self.grid.GetFoodMatrix())
         plt.table(cellText=df.values, loc='center')
         plt.show()
