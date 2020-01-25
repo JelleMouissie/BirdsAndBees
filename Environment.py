@@ -28,8 +28,8 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(30, 30, 10000, 10000, 1, 1, self.predators),
-                Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
+        return [Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
+                # Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
 
     def draw(self):
         print(self.hives[0].GetStatus())

@@ -118,9 +118,9 @@ class Hive:
             scout.food_value = grid.Get(scout.food_location[0], scout.food_location[1]).GetCellAttractiveness(currentDate)
 
             # increase death change if distance to food source is long
-            age_change = (0.5/150)*scout.hive_distance*10
-            for employee in gather_group:
-                employee.age += age_change
+            # age_change = (0.5/150)*scout.hive_distance*10
+            # for employee in gather_group:
+            #     employee.age += age_change
 
             start_slice = end_slice
 

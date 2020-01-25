@@ -1,4 +1,16 @@
 
+# DEZE IN EEN APART TXT FILE ZETTEN??
+NUTRITION_PER_PLANT = 500
+ALL_PLANTS = {0: [NUTRITION_PER_PLANT, 2, 1, [1, 60]],
+                1: [NUTRITION_PER_PLANT, 2, 1, [10, 70]],
+                2: [NUTRITION_PER_PLANT, 2, 1, [30, 100]],
+                3: [NUTRITION_PER_PLANT, 2, 1, [50, 110]],
+                4: [NUTRITION_PER_PLANT, 2, 1, [70, 120]],
+                5: [NUTRITION_PER_PLANT, 2, 1, [90, 140]],
+                6: [NUTRITION_PER_PLANT, 2, 1, [110, 160]],
+                7: [NUTRITION_PER_PLANT, 2, 1, [130, 170]],
+                8: [NUTRITION_PER_PLANT, 2, 1, [160, 190]],
+                9: [NUTRITION_PER_PLANT, 2, 1, [180, 200]]}
 
 class PlantSpecies:
 
@@ -22,15 +34,5 @@ class PlantSpecies:
 
 
 def GeneratePlantSpecies(species):
-    all_plants = {0: [2500, 2, 1, [1, 40]],
-                    1: [2500, 2, 1, [20, 60]],
-                    2: [2500, 2, 1, [40, 80]],
-                    3: [2500, 2, 1, [60, 100]],
-                    4: [2500, 2, 1, [80, 120]],
-                    5: [2500, 2, 1, [100, 140]],
-                    6: [2500, 2, 1, [120, 160]],
-                    7: [2500, 2, 1, [140, 180]],
-                    8: [2500, 2, 1, [160, 200]],
-                    9: [2500, 2, 1, [180, 200]]}
-    plant = all_plants[species]
+    plant = ALL_PLANTS[species]
     return PlantSpecies(plant[0], plant[1], plant[2], plant[3])

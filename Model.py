@@ -1,3 +1,5 @@
+
+
 def make_getter(name):
     """Returns a getter function which returns the attribute `name'."""
     return lambda self: getattr(self, name)

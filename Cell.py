@@ -55,11 +55,13 @@ class Cell:
                     self.vegitation[plant][1] = 0
         return gatheredFood
 
+
     def getFoodLeft(self):
         foodLeft = 0
         for plant in self.vegitation.keys():
             foodLeft += self.vegitation[plant][1]
         return foodLeft
+
 
     def incrementYear(self):
         reproductions = []
