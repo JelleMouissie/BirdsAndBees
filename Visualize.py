@@ -12,7 +12,16 @@ This file visualizes tests performed on the model
 # levels of monoculture  visualized as heatmap
 LEVELS = [0, 6, 9, 14]
 
-def grid_heatmap(levels):
+def randomize_2d(lst):
+    len1 = len(lst)
+    len2 = len(lst[0])
+
+    flat = [l for sub in lst for l in sub]
+    np.random.shuffle(flat)
+
+    return [[flat[i*len1 + j] for i in range(len2)] for j in range(len1)]
+
+def grid_heatmap(levels, randomize):
     """
     visualizes grid as heatmap based on diversity of plants
     """
@@ -43,6 +52,8 @@ def grid_heatmap(levels):
             print(level, col_len, row_len)
             fraction = 100 - (((col_len - 2*level) * (row_len - 2*level))/(col_len * row_len)*100)
             fractions.append(fraction)
+            if randomize:
+                grid = randomize_2d(grid)
             grids += [grid]
 
     grid1 = np.array(grids[0])
@@ -72,4 +83,4 @@ def grid_heatmap(levels):
 
 
 if __name__ == '__main__':
-    grid_heatmap(LEVELS)
+    grid_heatmap(LEVELS, True)
