@@ -16,9 +16,14 @@ def grid_heatmap(levels):
     """
     visualizes grid as heatmap based on diversity of plants
     """
-    fig, axs = plt.subplots(2, 2)
+    fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
+    # cbar_ax = fig.add_axes([.91,.3,.03,.4])
+
     fig.suptitle('Food diversity for different levels of monoculture')
     grids = []
+    row_len = 0
+    col_len = 0
+    fractions = []
     for level in levels:
         grid = []
         with open(f"Grids/Monoculture/{level}.csv") as f:
@@ -33,6 +38,11 @@ def grid_heatmap(levels):
                             diversity += 1
                     row += [diversity]
                 grid += [row]
+                row_len = len(row)
+            col_len = len(grid)
+            print(level, col_len, row_len)
+            fraction = 100 - (((col_len - 2*level) * (row_len - 2*level))/(col_len * row_len)*100)
+            fractions.append(fraction)
             grids += [grid]
 
     grid1 = np.array(grids[0])
@@ -40,22 +50,23 @@ def grid_heatmap(levels):
     grid3 = np.array(grids[2])
     grid4 = np.array(grids[3])
 
-    axs[0, 0].imshow(grid1)
-    axs[0, 0].set_title(f'Mono level: {levels[0]}')
+    im = axs[0, 0].imshow(grid1)
+    axs[0, 0].set_title(f'Mono level: {round(fractions[0],1)}%')
     axs[0, 1].imshow(grid2)
-    axs[0, 1].set_title(f'Mono level: {levels[1]}')
+    axs[0, 1].set_title(f'Mono level: {round(fractions[1],1)}%')
     axs[1, 0].imshow(grid3)
-    axs[1, 0].set_title(f'Mono level: {levels[2]}')
+    axs[1, 0].set_title(f'Mono level: {round(fractions[2],1)}%')
     axs[1, 1].imshow(grid4)
-    axs[1, 1].set_title(f'Mono level: {levels[3]}')
+    axs[1, 1].set_title(f'Mono level: {round(fractions[3],1)}%')
 
     for ax in axs.flat:
-        ax.set(xlabel='Breadth', ylabel='Height')
+        ax.set(xlabel='Breadth', ylabel='Height',xticks=[0,5,10,15,20,25])
 
     for ax in axs.flat:
         ax.label_outer()
 
     # TODO PUT COLORBAR IN
+    plt.colorbar(im, ax = [axs[0,0],axs[0,1],axs[1,0], axs[1,1]])
 
     plt.show()
 
