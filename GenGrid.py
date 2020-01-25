@@ -88,7 +88,7 @@ def gen_cell(diversity):
     for i in range(len(randomindexes)):
         amount = randomindexes[i] - currentindex
         currentindex = randomindexes[i]
-        vegitation[i] = [amount, amount * ALL_PLANTS[i][1]]
+        vegitation[i] = [amount, amount * ALL_PLANTS[i][0]]
 
     return vegitation
 

@@ -2,27 +2,48 @@ from PlantSpecies import GeneratePlantSpecies
 from random import random
 
 class Cell:
-    def __init__(self, diversity = 9):
+    # def __init__(self, diversity = 9):
+    #     self.vegitation = {}
+
+    #     self.IntializeVegitation()
+
+    def __init__(self, diversity, prop_cell, plantSpecies):
         self.vegitation = {}
         self.diversity = diversity
-        self.IntializeVegitation()
+        self.IntializeVegitation(prop_cell, plantSpecies)
 
-    def IntializeVegitation(self):
-        plantSpecies = []
-        for x in range(self.diversity):
-            plantSpecies += [GeneratePlantSpecies(x)]
 
-        # spread plant species over cell
-        randomindexes = []
-        for y in range(self.diversity-1):
-            randomindexes += [int(random()*100)]
-        randomindexes.sort()
-        randomindexes += [100]
-        currentindex = 0
-        for i in range(len(randomindexes)):
-            amount = randomindexes[i] - currentindex
-            currentindex = randomindexes[i]
-            self.vegitation[plantSpecies[i]] = [amount, amount * plantSpecies[i].GetNutrition()]
+    def IntializeVegitation(self, prop_cell, plantSpecies):
+
+        # DIT HOEFT NIET VOOR IEDERE CELL GEDAAN TE WORDEN TOCH?
+        # plantSpecies = []
+        # for x in range(self.diversity):
+        #     plantSpecies += [GeneratePlantSpecies(x)]
+
+        for i in prop_cell.keys():
+            # print(i)
+            plant_prop = prop_cell[i]
+            self.vegitation[plantSpecies[i]] = [plant_prop[0], plant_prop[1]]
+
+        # print(self.vegitation)
+
+
+    # def IntializeVegitation(self):
+    #     plantSpecies = []
+    #     for x in range(self.diversity):
+    #         plantSpecies += [GeneratePlantSpecies(x)]
+    #
+    #     # spread plant species over cell
+    #     randomindexes = []
+    #     for y in range(self.diversity-1):
+    #         randomindexes += [int(random()*100)]
+    #     randomindexes.sort()
+    #     randomindexes += [100]
+    #     currentindex = 0
+    #     for i in range(len(randomindexes)):
+    #         amount = randomindexes[i] - currentindex
+    #         currentindex = randomindexes[i]
+    #         self.vegitation[plantSpecies[i]] = [amount, amount * plantSpecies[i].GetNutrition()]
 
     def GetVegitation(self):
         return self.vegitation
@@ -47,6 +68,7 @@ class Cell:
 
                 if plantNutrition > potentialFood:
                     self.vegitation[plant][1] -= potentialFood
+                    # print('yeet')
                     gatheredFood += potentialFood
                     break
                 else:

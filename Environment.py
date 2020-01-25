@@ -13,7 +13,8 @@ class Environment(Model):
         Model.__init__(self)
         self.make_param('x', 30)
         self.make_param('y', 30)
-        self.make_param('diversity', 9)
+        self.make_param('diversity', 10)
+        self.make_param('monoculture_level', 0)
         self.make_param('fireLocs', [[0,1]])
         self.make_param('fireDates', [100])
         self.make_param('predators', 0.0000)
@@ -24,7 +25,9 @@ class Environment(Model):
     def reset(self):
         self.currentDate = [0, 0]
         self.grid = Grid(self.x, self.y)
-        self.grid.initializeCells(self.diversity)
+        # self.grid.initializeCells(self.diversity)
+        # IK GA ER NU VAN UIT DAT WE DIVERSITY VAST OP 9 HOUDEN
+        self.grid.initializeCells(self.diversity, self.monoculture_level)
 
 
     def makeHives(self):
