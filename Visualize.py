@@ -10,7 +10,7 @@ Sander van Oostveen, Jelle Mouissie and Joos Akkerman
 This file visualizes tests performed on the model
 """
 # levels of monoculture  visualized as heatmap
-LEVELS = [0, 6, 9, 14]
+LEVELS = [0, 4, 9, 14]
 
 def randomize_2d(lst):
     len1 = len(lst)
@@ -49,7 +49,6 @@ def grid_heatmap(levels, randomize):
                 grid += [row]
                 row_len = len(row)
             col_len = len(grid)
-            print(level, col_len, row_len)
             fraction = 100 - (((col_len - 2*level) * (row_len - 2*level))/(col_len * row_len)*100)
             fractions.append(fraction)
             if randomize:
@@ -87,7 +86,7 @@ def scatter_mono():
     Visualises scatter with relation between level of monoculture and average
     survival rate.
     """
-    
+
 
 
 
