@@ -22,11 +22,16 @@ class Grid:
         """
         Initializes cells by reading csv with requested monoculture level
         """
+
+
         self.cells = []
 
         # VERPLAATST VANAF CELL OMDAT ZE MAAR EEN KEER GEGENEREERD HOEVEN TE WORDEN
         for x in range(diversity):
+<<<<<<< HEAD
             # print(x)
+=======
+>>>>>>> 1c1d21d897ce3ea6cf809155fe2a3f3581f0167c
             self.plantSpecies += [GeneratePlantSpecies(x)]
 
         with open(f"Grids/Monoculture/{monoculture_level}.csv") as f:

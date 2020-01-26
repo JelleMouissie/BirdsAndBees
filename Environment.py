@@ -100,6 +100,16 @@ class Environment(Model):
         # plt.plot(range(len(pophistory)), pophistory)
         plt.show()
 
+    def OverrideValues(self, x, y, diversity, monoculture_level):
+        self.x = x
+        self.y = y
+        self.diversity = diversity
+        self.monoculture_level = monoculture_level
+
+    def GetResults(self):
+        return self.hives[0].Getpophistory()
+
+
 
 if __name__ == "__main__":
     Env = Environment()

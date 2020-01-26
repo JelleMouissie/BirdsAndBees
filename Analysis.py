@@ -1,6 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import Visualize as vis
+from Environment import Environment
+from GenGrid import gen_grid
+import csv
+
 
 
 """
@@ -24,21 +28,31 @@ def test_mono():
     for iter in range(ITERATIONS):
         results = []
 
+        for level in range(LEVELS+1):
+            with open(f"Grids/Monoculture/{level}.csv", 'w'): pass
+
+        gen_grid()
         # TODO: USE GenGrid TO OVERWRITE GRIDS (Jelle)
 
         # perform test on grid for different levels
         for level in range(LEVELS + 1):
-            pass
-            # TODO: RUN MODEL FOR GIVEN LEVEL (Jelle)
-            # TODO: COLLECT AVG POPULATION SIZE OF HIVE IN LAST PERIOD (Jelle)
-            # TODO: SAVE POPULATION SIZE IN ORDER OF MON LEVELS (Jelle)
+            Env = Environment()
+            Env.OverrideValues(30, 30, 10, level)
+            Env.reset()
+
+            for i in range(999):
+                Env.step()
+
+            result = Env.GetResults()
+            results += [result]
+
 
         # TODO WRITE RESULTS AS ROW TO CSV (Jelle)
         # open file to write results to
-        # with open(f'Results/monoculture.csv', 'a', newline='') as file:
-        #     wr = csv.writer(file, quoting=csv.QUOTE_ALL)
-        #     for row in cells:
-        #         wr.writerow(row)
+        with open(f'Results/monoculture.csv', 'a', newline='') as file:
+            wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+            for row in results:
+                wr.writerow(row)
 
 
     # TODO: IMPLEMENT VIS FUNCTION THAT PLOTS AVG POP ON Y-AXIS AND MONO LEVEL
@@ -50,11 +64,22 @@ def regress():
     """
     Performs a regression analysis over survival rate and level of monoculture
     """
-    pass
     # TODO: PERFORM REGRESSION ANALYSIS
+    pass
+
+
+def ttests():
+    """
+    Performs student t-tests to determine significance effect of monoculture on
+    population size.
+    """
+    # TODO: PERFORM T-TESTS
+    pass
 
 
 
 
 if __name__ == '__main__':
     test_mono()
+    regress()
+    ttests()
