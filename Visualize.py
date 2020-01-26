@@ -55,14 +55,15 @@ def grid_heatmap(levels, randomize):
                 grid = randomize_2d(grid)
             grids += [grid]
 
+    grids[0][0][0] = 1
     grid1 = np.array(grids[0])
     grid2 = np.array(grids[1])
     grid3 = np.array(grids[2])
     grid4 = np.array(grids[3])
 
-    im = axs[0, 0].imshow(grid1)
+    axs[0, 0].imshow(grid1)
     axs[0, 0].set_title(f'Mono level: {round(fractions[0],1)}%')
-    axs[0, 1].imshow(grid2)
+    im = axs[0, 1].imshow(grid2)
     axs[0, 1].set_title(f'Mono level: {round(fractions[1],1)}%')
     axs[1, 0].imshow(grid3)
     axs[1, 0].set_title(f'Mono level: {round(fractions[2],1)}%')
@@ -76,7 +77,8 @@ def grid_heatmap(levels, randomize):
         ax.label_outer()
 
     # TODO PUT COLORBAR IN
-    plt.colorbar(im, ax = [axs[0,0],axs[0,1],axs[1,0], axs[1,1]])
+    col = plt.colorbar(im, ax = [axs[0,0],axs[0,1],axs[1,0], axs[1,1]])
+    # col.set_ticks([0,5,10])
 
     plt.show()
 

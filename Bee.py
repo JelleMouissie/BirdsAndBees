@@ -38,18 +38,33 @@ class Scout(Bee):
         self.food_value = 0
         self.hive_distance = 0
 
-
     #Update scout for 1 simulation step. If employed, do nothing (Handled in Hive.py)
     def update(self, grid, currentDate):
         if self.food_value > FOOD_BIAS:
             return True
         return self.search(grid, currentDate)
 
+    def pos_in_grid(self, pos, limit):
+        if pos < 0:
+            return 0
+        elif pos > (limit - 1):
+            return limit -1
+        return pos
+
 
     def search(self, grid, currentDate):
         xlim, ylim  = grid.Getlimits()
-        self.pos_x = random.randint(0,xlim) - 1
-        self.pos_y = random.randint(0,ylim) - 1
+
+        x_cof = random.randint(-5,5)
+        y_cof = random.randint(-5,5)
+
+        new_posX = self.pos_x + x_cof
+        new_posY = self.pos_y + y_cof
+
+        # self.pos_x = random.randint(0,xlim) - 1
+        # self.pos_y = random.randint(0,ylim) - 1
+        self.pos_x = self.pos_in_grid(new_posX, xlim)
+        self.pos_y = self.pos_in_grid(new_posY, ylim)
 
         tile_value = grid.Get(self.pos_x,self.pos_y).GetCellAttractiveness(currentDate)
         if tile_value > FOOD_BIAS:                        #TODO: Determine when food source is good enough.  gather_food           !!!

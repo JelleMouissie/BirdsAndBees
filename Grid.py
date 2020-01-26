@@ -26,7 +26,7 @@ class Grid:
 
         # VERPLAATST VANAF CELL OMDAT ZE MAAR EEN KEER GEGENEREERD HOEVEN TE WORDEN
         for x in range(diversity):
-            print(x)
+            # print(x)
             self.plantSpecies += [GeneratePlantSpecies(x)]
 
         with open(f"Grids/Monoculture/{monoculture_level}.csv") as f:
@@ -39,7 +39,7 @@ class Grid:
                 row = []
                 for cell in csv_row:
                     prop_cell = ast.literal_eval(cell)
-                    print(cell)
+                    # print(cell)
                     row.append(Cell(diversity, prop_cell, self.plantSpecies))
                 self.cells += [row]
 

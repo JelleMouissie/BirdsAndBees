@@ -28,6 +28,7 @@ class Environment(Model):
         # self.grid.initializeCells(self.diversity)
         # IK GA ER NU VAN UIT DAT WE DIVERSITY VAST OP 9 HOUDEN
         self.grid.initializeCells(self.diversity, self.monoculture_level)
+        self.hives =  self.makeHives()
 
 
     def makeHives(self):
@@ -69,7 +70,7 @@ class Environment(Model):
                 self.grid.ForestFire(self.fireLocs[index][0], self.fireLocs[index][1])
 
     def incrementYear(self):
-        self.draw()
+        # self.draw()
         for hive in self.hives:
             hive.incrementYear()
             self.grid.incrementYear()
