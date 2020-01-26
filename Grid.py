@@ -70,8 +70,15 @@ class Grid:
     def drought(self):
         for row in self.cells:
             for cell in row:
-                pass
                 cell.drought()
 
     def ForestFire(self, x, y):
         self.cells[x][y].burn()
+
+    def GetPercentageMonoculture(self):
+        monocultures = 0
+        for row in self.cells:
+            for cell in row:
+                if cell.IsMonoCulture():
+                    monocultures += 1
+        return monocultures / self.x * self.y * 100

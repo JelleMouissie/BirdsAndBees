@@ -182,15 +182,15 @@ class Hive:
         Increments year and decreases bee population in winter period based
         on available food supply.
         """
-        print("voor de winter:", self.food_level)
+        # print("voor de winter:", self.food_level)
         a = 0.37222
         b = self.food_level / (FOOD_PER_BEE * 165 * max(self.population, 1))
         factor = min(a, b)
 
         self.population = int(self.population * factor)
         self.food_level -= self.population * 165 * FOOD_PER_BEE
-        print("na de winter:", self.food_level)
-        print(factor)
+        # print("na de winter:", self.food_level)
+        # print(factor)
         self.GeneratePopulation()
 
 

@@ -83,3 +83,12 @@ class Cell:
 
     def burn(self):
         pass # sererely decrease plants
+
+    def IsMonoCulture(self):
+        onePlant = False
+        for plant in self.vegitation.keys():
+            if self.vegitation[plant][0] != 0 and not onePlant:
+                onePlant = True
+            elif self.vegitation[plant][0] != 0 and onePlant:
+                return True
+        return False

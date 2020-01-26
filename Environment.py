@@ -109,7 +109,8 @@ class Environment(Model):
     def GetResults(self):
         return self.hives[0].Getpophistory()
 
-
+    def GetPercentageMonoculture(self):
+        return self.grid.GetPercentageMonoculture()
 
 if __name__ == "__main__":
     Env = Environment()
