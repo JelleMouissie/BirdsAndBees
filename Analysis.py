@@ -50,11 +50,22 @@ def regress():
     """
     Performs a regression analysis over survival rate and level of monoculture
     """
-    pass
     # TODO: PERFORM REGRESSION ANALYSIS
+    pass
+
+
+def ttests():
+    """
+    Performs student t-tests to determine significance effect of monoculture on
+    population size.
+    """
+    # TODO: PERFORM T-TESTS
+    pass
 
 
 
 
 if __name__ == '__main__':
     test_mono()
+    regress()
+    ttests()
