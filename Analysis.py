@@ -17,7 +17,7 @@ This file contains the statistical analysis of data produced by the model
 
 ITERATIONS = 1
 PERIODS = 5
-TIME_PER_SEASON = 2
+TIME_PER_SEASON = 200
 # LEVELS = 15
 LEVELS = 5
 
@@ -67,7 +67,7 @@ def test_mono():
 
     # TODO: IMPLEMENT VIS FUNCTION THAT PLOTS AVG POP ON Y-AXIS AND MONO LEVEL
     # ON X-AXIS
-    vis.scatter_mono()
+    # vis.scatter_mono()
 
 
 def regress(pop_sizes, mono_levels):
@@ -87,15 +87,17 @@ def ttest():
 
     # open test results and perform regression analysis
     betas = []
-    with open(f"Results/monoculture.csv") as f:
+    # with open(f"Results/monoculture.csv") as f:
+    with open(f"output.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
 
         iterations = {}
         for run in csv_reader:
+            print(run)
             if int(run[0]) not in iterations:
-                iterations[int(run[0])] = {int(run[1]): int(run[-1])}
+                iterations[int(run[0])] = {int(run[1]): int(run[-2])}
             else:
-                iterations[int(run[0])][int(run[1])] = int(run[-1])
+                iterations[int(run[0])][int(run[1])] = int(run[-2])
 
         print(iterations)
         for iteration in iterations:
@@ -123,5 +125,5 @@ def ttest():
 
 
 if __name__ == '__main__':
-    test_mono()
-    # ttest()
+    # test_mono()
+    ttest()

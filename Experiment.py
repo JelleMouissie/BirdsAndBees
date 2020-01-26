@@ -153,12 +153,14 @@ def try_sim(Env, i):
 
 def joosExperiment(Env):
     results = []
-    for i in range(0,100, 10):      #Percentages
-        for j in range(1):          #Iterations
+    for j in range(10):
+        print(f'Iteration: {j}')
+        for i in range(0,100,10):
+            print(f'Percentage: {i})
             try_sim(Env, i)
             results.append([j+1,i+1] + Env.hives[0].Getpophistory())
 
-    with open('output.csv','w') as result_file:
+    with open('Results/mono_test.csv','a') as result_file:
         wr = csv.writer(result_file, dialect='excel')
         wr.writerows(results)
 
