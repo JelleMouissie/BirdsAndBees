@@ -52,7 +52,7 @@ def gen_grid():
     # change initial grid with increasing monoculture
     for level in range(int(BREADTH/2)):
         level_cells = []
-        print(level+1)
+        # print(level+1)
 
         # change rows and columns based on level and print to csv
         for row in cells:
@@ -79,7 +79,7 @@ def gen_cell(diversity):
 
     # spread plant species over cell
     randomindexes = []
-    for y in range(diversity):
+    for y in range(diversity-2):
         randomindexes += [int(random()*100)]
     randomindexes.sort()
     randomindexes += [100]
