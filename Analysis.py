@@ -17,8 +17,9 @@ This file contains the statistical analysis of data produced by the model
 
 ITERATIONS = 1
 PERIODS = 5
-TIME_PER_SEASON = 200
-LEVELS = 15
+TIME_PER_SEASON = 2
+# LEVELS = 15
+LEVELS = 5
 
 def test_mono():
     """
@@ -39,21 +40,25 @@ def test_mono():
         # perform test on grid for different levels
         for level in range(LEVELS + 1):
             Env = Environment()
-            Env.OverrideValues(30, 30, 10, level)
+            Env.OverrideValues(10, 10, 10, level)
             Env.reset()
 
             for i in range(TIME_PER_SEASON*PERIODS-1):
                 Env.step()
 
-            result = Env.GetResults()
+            result = [iter, level, Env.GetPercentageMonoculture()]
+            for val in Env.GetResults():
+                result += [val]
             # print(len(result))
             # print(result)
+            # results += [iter, level, result]
             results += [result]
             # print(results)
 
 
         # TODO WRITE RESULTS AS ROW TO CSV (Jelle)
         # open file to write results to
+        print()
         with open(f'Results/monoculture.csv', 'a', newline='') as file:
             wr = csv.writer(file, quoting=csv.QUOTE_ALL)
             for row in results:
@@ -80,28 +85,31 @@ def ttest():
     population size.
     """
 
-    # open test results and perfrom regression analysis
+    # open test results and perform regression analysis
     betas = []
     with open(f"Results/monoculture.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
 
         iterations = {}
         for run in csv_reader:
-            if run[0] not in iterations:
-                iterations[run[0]] = {run[1]: run[-1]}
+            if int(run[0]) not in iterations:
+                iterations[int(run[0])] = {int(run[1]): int(run[-1])}
             else:
-                iterations[run[0]][run[1]] = run[-1]
+                iterations[int(run[0])][int(run[1])] = int(run[-1])
 
+        print(iterations)
         for iteration in iterations:
             mono_levels = list(iterations[iteration].keys())
             pop_sizes = [iterations[iteration][i] for i in mono_levels]
-            mono_levels = [int(i) for i in mono_levels]
-            pop_sizes = [int(i) for i in pop_sizes]
+            # mono_levels = [int(i) for i in mono_levels]
+            # pop_sizes = [int(i) for i in pop_sizes]
+            # all_pop_sizes += [pop_sizes]
 
             beta = regress(pop_sizes, mono_levels)
             betas += [beta]
-            
+
         print(betas)
+        vis.scatter_mono(iterations)
 
     # perform t-test
     ttest_result = stats.ttest_ind(betas, 0, equal_var=True)
@@ -115,5 +123,5 @@ def ttest():
 
 
 if __name__ == '__main__':
-    # test_mono()
-    ttest()
+    test_mono()
+    # ttest()
