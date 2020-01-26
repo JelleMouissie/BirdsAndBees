@@ -81,4 +81,4 @@ class Grid:
             for cell in row:
                 if cell.IsMonoCulture():
                     monocultures += 1
-        return monocultures / self.x * self.y * 100
+        return monocultures / self.x * self.y
