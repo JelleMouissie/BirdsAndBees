@@ -83,13 +83,19 @@ def grid_heatmap(levels, randomize):
     plt.show()
 
 
-def scatter_mono():
+def scatter_mono(iterations):
     """
     Visualises scatter with relation between level of monoculture and average
     survival rate.
     """
-
-
+    for iteration in iterations:
+        data = iterations[iteration]
+        for datapoint in data:
+            plt.scatter(datapoint, data[datapoint], color='green')
+    plt.title('Final population for differing levels of monoculture')
+    plt.ylabel('Monoculture (%)')
+    plt.xlabel('Surviving population')
+    plt.show()
 
 
 if __name__ == '__main__':

@@ -80,28 +80,31 @@ def ttest():
     population size.
     """
 
-    # open test results and perfrom regression analysis
+    # open test results and perform regression analysis
     betas = []
     with open(f"Results/monoculture.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
 
         iterations = {}
         for run in csv_reader:
-            if run[0] not in iterations:
-                iterations[run[0]] = {run[1]: run[-1]}
+            if int(run[0]) not in iterations:
+                iterations[int(run[0])] = {int(run[1]): int(run[-1])}
             else:
-                iterations[run[0]][run[1]] = run[-1]
+                iterations[int(run[0])][int(run[1])] = int(run[-1])
 
+        print(iterations)
         for iteration in iterations:
             mono_levels = list(iterations[iteration].keys())
             pop_sizes = [iterations[iteration][i] for i in mono_levels]
-            mono_levels = [int(i) for i in mono_levels]
-            pop_sizes = [int(i) for i in pop_sizes]
+            # mono_levels = [int(i) for i in mono_levels]
+            # pop_sizes = [int(i) for i in pop_sizes]
+            # all_pop_sizes += [pop_sizes]
 
             beta = regress(pop_sizes, mono_levels)
             betas += [beta]
-            
+
         print(betas)
+        vis.scatter_mono(iterations)
 
     # perform t-test
     ttest_result = stats.ttest_ind(betas, 0, equal_var=True)
