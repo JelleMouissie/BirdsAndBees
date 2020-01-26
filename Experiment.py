@@ -156,7 +156,7 @@ def joosExperiment(Env):
     for j in range(10):
         print(f'Iteration: {j}')
         for i in range(0,100,10):
-            print(f'Percentage: {i})
+            print(f'Percentage: {i}')
             try_sim(Env, i)
             results.append([j+1,i+1] + Env.hives[0].Getpophistory())
 
