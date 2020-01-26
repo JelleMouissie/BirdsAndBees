@@ -4,6 +4,7 @@ import Visualize as vis
 from Environment import Environment
 from GenGrid import gen_grid
 import csv
+import scipy.stats as stats
 
 
 
@@ -14,8 +15,9 @@ Sander van Oostveen, Jelle Mouissie and Joos Akkerman
 This file contains the statistical analysis of data produced by the model
 """
 
-ITERATIONS = 10
-PERIODS = 6
+ITERATIONS = 1
+PERIODS = 5
+TIME_PER_SEASON = 200
 LEVELS = 15
 
 def test_mono():
@@ -40,11 +42,14 @@ def test_mono():
             Env.OverrideValues(30, 30, 10, level)
             Env.reset()
 
-            for i in range(999):
+            for i in range(TIME_PER_SEASON*PERIODS-1):
                 Env.step()
 
             result = Env.GetResults()
+            # print(len(result))
+            # print(result)
             results += [result]
+            # print(results)
 
 
         # TODO WRITE RESULTS AS ROW TO CSV (Jelle)
@@ -60,26 +65,55 @@ def test_mono():
     vis.scatter_mono()
 
 
-def regress():
+def regress(pop_sizes, mono_levels):
     """
-    Performs a regression analysis over survival rate and level of monoculture
+    Performs a regression analysis over survival rate and level of monoculture,
+    return slope
     """
-    # TODO: PERFORM REGRESSION ANALYSIS
-    pass
+    regress_result = stats.linregress(mono_levels, pop_sizes)
+    return regress_result[0]
 
 
-def ttests():
+def ttest():
     """
-    Performs student t-tests to determine significance effect of monoculture on
+    Performs student t-test to determine significance effect of monoculture on
     population size.
     """
-    # TODO: PERFORM T-TESTS
-    pass
 
+    # open test results and perfrom regression analysis
+    betas = []
+    with open(f"Results/monoculture.csv") as f:
+        csv_reader = csv.reader(f, delimiter=',')
 
+        iterations = {}
+        for run in csv_reader:
+            if run[0] not in iterations:
+                iterations[run[0]] = {run[1]: run[-1]}
+            else:
+                iterations[run[0]][run[1]] = run[-1]
+
+        for iteration in iterations:
+            mono_levels = list(iterations[iteration].keys())
+            pop_sizes = [iterations[iteration][i] for i in mono_levels]
+            mono_levels = [int(i) for i in mono_levels]
+            pop_sizes = [int(i) for i in pop_sizes]
+
+            beta = regress(pop_sizes, mono_levels)
+            betas += [beta]
+            
+        print(betas)
+
+    # perform t-test
+    ttest_result = stats.ttest_ind(betas, 0, equal_var=True)
+    avg_beta = sum(betas)/len(betas)
+    stddev_beta = np.std(betas)
+    t_stat = ttest_result[0]
+    p_value = ttest_result[1]
+    print(f'Results from t-test:')
+    print(f'Avg beta: {avg_beta}, stddev beta: {stddev_beta}.')
+    print(f't-stat: {t_stat}, p-value: {p_value}.')
 
 
 if __name__ == '__main__':
-    test_mono()
-    regress()
-    ttests()
+    # test_mono()
+    ttest()
