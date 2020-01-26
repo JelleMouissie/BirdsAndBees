@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import interp1d
 import random
+import csv
 
 def find_peaks(population):
     size = len(population) - 1
@@ -70,10 +71,10 @@ def run_sim(Env, percentage):
 
     div_grid1 = get_monoculture(Env.grid.cells)
 
-    plt.figure(2)
-
-    plt.imshow(div_grid1)
-    plt.colorbar()
+    # plt.figure(2)
+    #
+    # plt.imshow(div_grid1)
+    # plt.colorbar()
     # plt.show()
 
     while i < 5:
@@ -102,33 +103,67 @@ def run_sim(Env, percentage):
 
     # Plot stuff for individual runs
 
-    plt.figure(1)
-
-    plt.plot(range(len(population)), population, xX, xY)
-
-    plt.figure(3)
-    div_grid2 = get_monoculture(Env.grid.cells)
-    plt.imshow(div_grid2)
-    plt.colorbar()
+    # plt.figure(1)
+    #
+    # plt.plot(range(len(population)), population, xX, xY)
+    #
+    # plt.figure(3)
+    # div_grid2 = get_monoculture(Env.grid.cells)
+    # plt.imshow(div_grid2)
+    # plt.colorbar()
     # plt.show()
-    print(peaks)
+    # print(peaks)
 
-    return f(pX[1]) - f(pX[0]), True
+    return (f(pX[1]) - f(pX[0])) / (pX[1] - pX[0]), True
     # return coef
+
+def sandersExperiments(Env):
+    results = []
+    # while(True):
+    #     coef, again = run_sim(Env, 50)
+    #     if again:
+    #         break
+
+    for i in range(45,55):
+        temp_results = []
+        for j in range(5):
+            v = 0
+            while(True):
+                coef, again = run_sim(Env, i)
+                v += 1
+                if again:
+                    temp_results.append(coef)
+                    break
+                elif v > 5:
+                    temp_results.append(0)
+                    break
+            # temp_results.append(run_sim(Env, i))
+        results.append(np.mean(temp_results))
+
+    plt.plot(range(45,55), results)
+    plt.show()
+
+def try_sim(Env, i):
+    v = 0
+    while(True):
+        coef, again = run_sim(Env, i)
+        v += 1
+        if again or v > 5:
+            break
+
+def joosExperiment(Env):
+    results = []
+    for i in range(0,100, 10):      #Percentages
+        for j in range(1):          #Iterations
+            try_sim(Env, i)
+            results.append([j+1,i+1] + Env.hives[0].Getpophistory())
+
+    with open('output.csv','w') as result_file:
+        wr = csv.writer(result_file, dialect='excel')
+        wr.writerows(results)
+
 
 if __name__ == "__main__":
     Env = En.Environment()
-    results = []
-    while(True):
-        coef, again = run_sim(Env, 50)
-        if again:
-            break
 
-    # for i in range(90,100):
-    #     temp_results = []
-    #     for j in range(5):
-    #         temp_results.append(run_sim(Env, i))
-    #     results.append(np.mean(temp_results))
-    #
-    # plt.plot(range(90,100), results)
-    plt.show()
+    joosExperiment(Env)
