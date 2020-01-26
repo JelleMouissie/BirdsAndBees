@@ -30,7 +30,8 @@ class Grid:
         for x in range(diversity):
             self.plantSpecies += [GeneratePlantSpecies(x)]
 
-        with open(f"Grids/Monoculture/{monoculture_level}.csv") as f:
+        # with open(f"Grids/Monoculture/{monoculture_level}.csv") as f:
+        with open(f"Grids/10by10/{monoculture_level}.csv") as f:
             csv_reader = csv.reader(f, delimiter=',')
             # cells = [line.split() for line in f]
             # for row in cells:

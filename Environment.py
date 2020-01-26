@@ -11,8 +11,8 @@ from Hive import Hive
 class Environment(Model):
     def __init__(self):
         Model.__init__(self)
-        self.make_param('x', 30)
-        self.make_param('y', 30)
+        self.make_param('x', 10)
+        self.make_param('y', 10)
         self.make_param('diversity', 10)
         self.make_param('monoculture_level', 0)
         self.make_param('fireLocs', [[0,1]])
@@ -32,7 +32,7 @@ class Environment(Model):
 
 
     def makeHives(self):
-        return [Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
+        return [Hive(5, 5, 10000, 10000, 1, 1, self.predators)]
                 # Hive(15, 15, 10000, 10000, 1, 1, self.predators)]
 
     def draw(self):

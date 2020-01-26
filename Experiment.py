@@ -1,6 +1,7 @@
 import Environment as En
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.interpolate import interp1d
 import random
 
 def find_peaks(population):
@@ -69,6 +70,12 @@ def run_sim(Env, percentage):
 
     div_grid1 = get_monoculture(Env.grid.cells)
 
+    plt.figure(2)
+
+    plt.imshow(div_grid1)
+    plt.colorbar()
+    # plt.show()
+
     while i < 5:
         if Env.step():
             i += 1
@@ -80,40 +87,48 @@ def run_sim(Env, percentage):
     pX = [peak[1] for peak in peaks]
     pY = [peak[0] for peak in peaks]
 
-    coef, b = np.polyfit(pX,pY,1)
-    print("Coeff is:" + str(coef))
+    if pY[0] is 0:
+        return 0, False
+
+    # coef, b = np.polyfit(pX,pY,1)
+    f = interp1d(pX,pY)
+    coef = 1
+    b = 1
+    # print("Coeff is:" + str(coef))
     xX = range(pX[0], pX[-1])
-    xY = [coef * x + b for x in xX]
+    # xY = [coef * x + b for x in xX]
+    xY = [f(x) for x in xX]
+    # xY = xX
 
     # Plot stuff for individual runs
 
-    # plt.figure(1)
-    #
-    # plt.plot(range(len(population)), population, xX, xY)
-    # plt.figure(2)
-    #
-    # div_grid2 = get_monoculture(Env.grid.cells)
-    # plt.imshow(div_grid1)
-    # plt.colorbar()
-    #
-    # plt.figure(3)
-    # plt.imshow(div_grid2)
-    # plt.colorbar()
-    # plt.show()
-    # print(peaks)
+    plt.figure(1)
 
-    return coef
+    plt.plot(range(len(population)), population, xX, xY)
+
+    plt.figure(3)
+    div_grid2 = get_monoculture(Env.grid.cells)
+    plt.imshow(div_grid2)
+    plt.colorbar()
+    # plt.show()
+    print(peaks)
+
+    return f(pX[1]) - f(pX[0]), True
+    # return coef
 
 if __name__ == "__main__":
     Env = En.Environment()
     results = []
-    # run_sim(Env, 94)
+    while(True):
+        coef, again = run_sim(Env, 50)
+        if again:
+            break
 
-    for i in range(90,100):
-        temp_results = []
-        for j in range(5):
-            temp_results.append(run_sim(Env, i))
-        results.append(np.mean(temp_results))
-
-    plt.plot(range(90,100), results)
+    # for i in range(90,100):
+    #     temp_results = []
+    #     for j in range(5):
+    #         temp_results.append(run_sim(Env, i))
+    #     results.append(np.mean(temp_results))
+    #
+    # plt.plot(range(90,100), results)
     plt.show()
