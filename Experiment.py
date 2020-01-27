@@ -164,8 +164,20 @@ def joosExperiment(Env):
         wr = csv.writer(result_file, dialect='excel')
         wr.writerows(results)
 
+def ConclusionExperiment(Env):
+    results = []
+    for j in range(10):
+        print(f'Iteration: {j}')
+        for i in range(40,60,1):
+            print(f'Percentage: {i}')
+            try_sim(Env, i)
+            results.append([j+1,i+1] + Env.hives[0].Getpophistory())
+
+    with open('Results/conclusion.csv','a') as result_file:
+        wr = csv.writer(result_file, dialect='excel')
+        wr.writerows(results)
+
 
 if __name__ == "__main__":
     Env = En.Environment()
-
-    joosExperiment(Env)
+    ConclusionExperiment(Env)
