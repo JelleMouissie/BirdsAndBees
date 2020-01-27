@@ -78,6 +78,17 @@ def regress(pop_sizes, mono_levels):
     return regress_result
 
 
+def get_max_run(run):
+    max = 0
+    max_i = 0
+    for i in range(800, 900):
+        if int(run[i]) > int(max):
+            max = run[i]
+            max_i = i
+    return max, max_i
+
+
+
 def ttest():
     """
     Performs student t-test to determine significance effect of monoculture on
@@ -88,19 +99,21 @@ def ttest():
     alphas = []
     betas = []
     iterations = {}
-    with open(f"Results/mono_test.csv") as f:
+    with open(f"Results/conclusion2.csv") as f:
     # with open(f"output.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
 
 
         for run in csv_reader:
-            print(run)
-            if int(run[0]) not in iterations:
-                iterations[int(run[0])] = {int(run[1]): int(run[-2])}
-            else:
-                iterations[int(run[0])][int(run[1])] = int(run[-2])
+            # print(run)
 
-        print(iterations)
+            max, max_i = get_max_run(run)
+            if int(run[0]) not in iterations:
+                iterations[int(run[0])] = {100 - int(run[1])-1: int(max)}
+            else:
+                iterations[int(run[0])][100 - int(run[1])-1] = int(max)
+
+        # print(iterations)
         for iteration in iterations:
             mono_levels = list(iterations[iteration].keys())
             pop_sizes = [iterations[iteration][i] for i in mono_levels]

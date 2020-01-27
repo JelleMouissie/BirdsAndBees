@@ -35,7 +35,7 @@ def grid_heatmap(levels, randomize):
     fractions = []
     for level in levels:
         grid = []
-        with open(f"Grids/Monoculture/{level}.csv") as f:
+        with open(f"Grids/10by10/{level}.csv") as f:
             csv_reader = csv.reader(f, delimiter=',')
             for csv_row in csv_reader:
                 row = []
@@ -88,20 +88,37 @@ def scatter_mono(iterations, avg_alpha, avg_beta):
     Visualises scatter with relation between level of monoculture and average
     survival rate.
     """
+
+    results = [[] for _ in range(20)]
+    first = True
     for iteration in iterations:
         data = iterations[iteration]
         for datapoint in data:
-            plt.scatter(datapoint, data[datapoint], s=5, color='red')
+            # print(datapoint, int((datapoint-30)/2))
+            results[19 - int((datapoint-30)/2)].append(data[datapoint])
+            plt.scatter(datapoint, data[datapoint], s=5, color='red', label=None)
+    plt.scatter(datapoint, data[datapoint], s=5, color='red', label='Population per Percentage')
+
+    averages = []
+    stds = []
+    for datapoint in results:
+        print(datapoint)
+        averages.append(np.mean(datapoint))
+        stds.append(np.std(datapoint))
+    plt.errorbar(range(68,28,-2), averages, yerr=stds, fmt='.', label='Average per Percentage')
+    plt.plot(range(70,30, -1 ), [60000 for _ in range(70,30, -1)], ':', label=None)
 
     # plot regression line
-    x = [0,90]
+    x = [40,60]
     y = [avg_alpha+avg_beta*i for i in x]
-    plt.plot(x, y, color='blue', label='regression line')
+    # plt.plot(x, y, color='blue', label='regression line')
 
-    plt.title('Final population for differing levels of monoculture')
-    plt.xlabel('Monoculture (%)')
-    plt.ylabel('Surviving population')
+    # plt.title('Final population for differing levels of monoculture')
+    plt.xlabel('Biodiversity (%)')
+    plt.ylabel('Maximum Surviving population')
     plt.legend(loc='upper right')
+    plt.xlim(75,25)
+    # plt.savefig('result2.svg', transparent=True)
     plt.show()
 
 
