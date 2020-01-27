@@ -7,7 +7,6 @@ import csv
 import scipy.stats as stats
 
 
-
 """
 Project Computational Science
 Sander van Oostveen, Jelle Mouissie and Joos Akkerman
@@ -76,7 +75,7 @@ def regress(pop_sizes, mono_levels):
     return slope
     """
     regress_result = stats.linregress(mono_levels, pop_sizes)
-    return regress_result[0]
+    return regress_result
 
 
 def ttest():
@@ -86,12 +85,14 @@ def ttest():
     """
 
     # open test results and perform regression analysis
+    alphas = []
     betas = []
-    # with open(f"Results/monoculture.csv") as f:
-    with open(f"output.csv") as f:
+    iterations = {}
+    with open(f"Results/mono_test.csv") as f:
+    # with open(f"output.csv") as f:
         csv_reader = csv.reader(f, delimiter=',')
 
-        iterations = {}
+
         for run in csv_reader:
             print(run)
             if int(run[0]) not in iterations:
@@ -107,16 +108,21 @@ def ttest():
             # pop_sizes = [int(i) for i in pop_sizes]
             # all_pop_sizes += [pop_sizes]
 
-            beta = regress(pop_sizes, mono_levels)
-            betas += [beta]
+            regress_result = regress(pop_sizes, mono_levels)
+            alphas += [regress_result[1]]
+            betas += [regress_result[0]]
 
-        print(betas)
-        vis.scatter_mono(iterations)
+        # print(betas)
 
-    # perform t-test
-    ttest_result = stats.ttest_ind(betas, 0, equal_var=True)
+
+    # plot scatter and regression line
+    avg_alpha = sum(alphas)/len(alphas)
     avg_beta = sum(betas)/len(betas)
     stddev_beta = np.std(betas)
+    vis.scatter_mono(iterations, avg_alpha, avg_beta)
+
+    # perform t-test
+    ttest_result = stats.ttest_ind(betas, 1, equal_var=True)
     t_stat = ttest_result[0]
     p_value = ttest_result[1]
     print(f'Results from t-test:')

@@ -83,7 +83,7 @@ def grid_heatmap(levels, randomize):
     plt.show()
 
 
-def scatter_mono(iterations):
+def scatter_mono(iterations, avg_alpha, avg_beta):
     """
     Visualises scatter with relation between level of monoculture and average
     survival rate.
@@ -91,10 +91,17 @@ def scatter_mono(iterations):
     for iteration in iterations:
         data = iterations[iteration]
         for datapoint in data:
-            plt.scatter(datapoint, data[datapoint], color='green')
+            plt.scatter(datapoint, data[datapoint], s=5, color='red')
+
+    # plot regression line
+    x = [0,90]
+    y = [avg_alpha+avg_beta*i for i in x]
+    plt.plot(x, y, color='blue', label='regression line')
+
     plt.title('Final population for differing levels of monoculture')
-    plt.ylabel('Monoculture (%)')
-    plt.xlabel('Surviving population')
+    plt.xlabel('Monoculture (%)')
+    plt.ylabel('Surviving population')
+    plt.legend(loc='upper right')
     plt.show()
 
 
