@@ -9,7 +9,7 @@ import csv
 Project Computational Science
 Sander van Oostveen, Jelle Mouissie and Joos Akkerman
 
-This file contains the code that runs our experiments.  
+This file contains the code that runs our experiments.
 """
 
 def find_peaks(population):
@@ -231,12 +231,11 @@ def make_maps(Env):
 
     plt.colorbar(im, ax=[axs[0,0], axs[0,1], axs[1,0], axs[1,1]])
     plt.savefig('diffPercentage3.svg', transparent=True)
-    # plt.show()
 
 
 if __name__ == "__main__":
     Env = En.Environment()
-    # ConclusionExperiment(Env)
+    ConclusionExperiment(Env)
     # sandersExperiments(Env)
     # joosExperiment(Enc)
     make_maps(Env)
