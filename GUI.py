@@ -7,10 +7,35 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-
 """
-GUI and Model Based on the pyics library from:
-Chun Wong, Hiroki Sayama, Koen Koning & Dick van Albada
+"pycx_gui.py"
+Realtime Simulation GUI (originally from PyCX)
+
+Developed by:
+Chun Wong
+email@chunwong.net
+
+Revised by:
+Hiroki Sayama
+sayama@binghamton.edu
+
+Copyright 2012 Chun Wong & Hiroki Sayama
+
+Simulation control & GUI extensions
+Copyright 2013 Przemyslaw Szufel & Bogumil Kaminski
+{pszufe, bkamins}@sgh.waw.pl
+
+Revised by:
+Koen Koning, K.Koning@uva.nl
+Modifications to make the code compatible with the framework of the UvA
+course `Introduction Computational Science', 2014/2015
+     Python 3 support, GUI refinements, improved parameter support
+
+Minor revision by
+Dick van Albada, G.D.vanAlbada@uva.nl
+Added plt.show() to drawModel() to force actual display of the plot
+
+Visualisation tool modified to assist our bee simulation
 """
 class GUI:
     def __init__(self, model, title='BeeSim', interval=0, stepSize=1,
@@ -189,7 +214,7 @@ class GUI:
             if self.model.step() is True:
                 self.stopRunning()
             self.currentStep += 1
-            self.setStatusStr(self.model.getDateAsString())
+            self.setStatusStr(self.model.get_date_as_string())
             self.status.configure(foreground='black')
             # if (self.currentStep) % self.stepSize == 0:
             #     self.drawModel()
@@ -201,7 +226,7 @@ class GUI:
         self.runPauseString.set("Continue Run")
         self.model.step()
         self.currentStep += 1
-        self.setStatusStr(self.model.getDateAsString())
+        self.setStatusStr(self.model.get_date_as_string())
         self.drawModel()
         if self.param_entries:
             self.buttonSaveParameters.configure(state=NORMAL)

@@ -1,5 +1,5 @@
 import numpy as np
-from PlantSpecies import GeneratePlantSpecies
+from PlantSpecies import generate_plant_species
 from random import random
 import csv
 
@@ -29,12 +29,12 @@ DIVERSITY = 9
 
 def gen_grid():
     """
-    Generates grid with increasing degree of monoculture
+    Generates grids with increasing degree of monoculture
     """
     # create initial grid:
-    plantSpecies = []
+    plant_species = []
     for plant_number in range(DIVERSITY):
-        plantSpecies += [ALL_PLANTS[plant_number]]
+        plant_species += [ALL_PLANTS[plant_number]]
 
     cells = []
     for y in range(HEIGHT):
@@ -52,7 +52,6 @@ def gen_grid():
     # change initial grid with increasing monoculture
     for level in range(int(BREADTH/2)):
         level_cells = []
-        # print(level+1)
 
         # change rows and columns based on level and print to csv
         for row in cells:
@@ -65,11 +64,12 @@ def gen_grid():
 
             level_cells.append(row)
 
-            # print grids to csv
+            # write grids to csv
             with open(f'Grids/Monoculture/{level+1}.csv', 'w', newline='') as file:
                 wr = csv.writer(file, quoting=csv.QUOTE_ALL)
                 for row in level_cells:
                     wr.writerow(row)
+
 
 def gen_cell(diversity):
     """

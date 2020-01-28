@@ -5,7 +5,17 @@ from scipy.interpolate import interp1d
 import random
 import csv
 
+"""
+Project Computational Science
+Sander van Oostveen, Jelle Mouissie and Joos Akkerman
+
+This file contains the code that runs our experiments.  
+"""
+
 def find_peaks(population):
+    """
+    Find yearly peaks in the population
+    """
     size = len(population) - 1
     result = []
 
@@ -17,15 +27,12 @@ def find_peaks(population):
                 largest = population[j]
                 large_j = j
         result.append((largest, large_j))
-
-    # for i, x in enumerate(population):
-    #     if i > 0 and i < size:
-    #         if x > old and x > population[i+1]:
-    #             result.append((x,i))
-    #     old = x
     return result
 
 def randomize_2d(lst):
+    """
+    Randomize a 2d list
+    """
     len1 = len(lst)
     len2 = len(lst[0])
 
@@ -34,7 +41,11 @@ def randomize_2d(lst):
 
     return [[flat[i*len1 + j] for i in range(len2)] for j in range(len1)]
 
+
 def get_monoculture(grid):
+    """
+    returns the diversity in the grid as a matrix
+    """
     div_grid = []
     for row in grid:
         div_row = []
@@ -47,7 +58,11 @@ def get_monoculture(grid):
         div_grid.append(div_row)
     return div_grid
 
+
 def increase_mono(percentage, Env, monoCell):
+    """
+    Increase the percentage of monoculture in a grid
+    """
     grid_size = len(Env.grid.cells)
     size = int(grid_size*grid_size * percentage /100)
 
@@ -57,7 +72,11 @@ def increase_mono(percentage, Env, monoCell):
     for i,j in samples:
         Env.grid.cells[i][j] = monoCell
 
+
 def get_maps(Env, percentage):
+    """
+    Get a Grid with a monoculture percentage
+    """
     Env.monoculture_level = 1
     Env.reset()
 
@@ -69,6 +88,9 @@ def get_maps(Env, percentage):
 
 
 def run_sim(Env, percentage):
+    """
+    Run a simulation
+    """
     Env.monoculture_level = 1
     Env.reset()
 
@@ -78,7 +100,6 @@ def run_sim(Env, percentage):
     i = 0
 
     div_grid1 = get_monoculture(Env.grid.cells)
-    # plt.show()
 
     while i < 5:
         if Env.step():
@@ -94,18 +115,10 @@ def run_sim(Env, percentage):
     if pY[0] is 0:
         return 0, False
 
-    # coef, b = np.polyfit(pX,pY,1)
-    # f = interp1d(pX,pY)
     coef = 1
     b = 1
-    # print("Coeff is:" + str(coef))
-    # xX = range(pX[0], pX[-1])
-    # xY = [coef * x + b for x in xX]
-    # xY = [f(x) for x in xX]
-    # xY = xX
 
     # Plot stuff for individual runs
-
     plt.figure(1)
 
     plt.plot(range(len(population)), population)
@@ -113,8 +126,6 @@ def run_sim(Env, percentage):
     plt.ylabel("Bees in Population")
 
     plt.savefig('popGrowthStable.svg', transparent=True)
-
-    # plt.figure(2)
 
     fig, axs = plt.subplots(1,2, sharex=True, sharey=True)
     div_grid2 = get_monoculture(Env.grid.cells)
@@ -127,9 +138,7 @@ def run_sim(Env, percentage):
     plt.colorbar(im, ax=axs)
     plt.savefig('EnvironmentChange.svg', transparent=True)
     plt.show()
-    print(peaks)
 
-    # return (f(pX[1]) - f(pX[0])) / (pX[1] - pX[0]), True
     return coef, True
 
 def sandersExperiments(Env):
@@ -159,12 +168,16 @@ def sandersExperiments(Env):
     plt.show()
 
 def try_sim(Env, i):
+    """
+    Try simulations untill we get a satisfactory result
+    """
     v = 0
     while(True):
         coef, again = run_sim(Env, i)
         v += 1
         if again or v > 5:
             break
+
 
 def joosExperiment(Env):
     results = []
@@ -179,7 +192,11 @@ def joosExperiment(Env):
         wr = csv.writer(result_file, dialect='excel')
         wr.writerows(results)
 
+
 def ConclusionExperiment(Env):
+    """
+    Write the result of the final experiment to a csv file
+    """
     results = []
     for j in range(10):
         print(f'Iteration: {j}')
@@ -194,6 +211,9 @@ def ConclusionExperiment(Env):
 
 
 def make_maps(Env):
+    """
+    Create Figures of the different maps
+    """
     maps = []
     for i in [20,40,60,80]:
         maps.append(get_maps(Env, i))
@@ -213,8 +233,10 @@ def make_maps(Env):
     plt.savefig('diffPercentage3.svg', transparent=True)
     # plt.show()
 
+
 if __name__ == "__main__":
     Env = En.Environment()
     # ConclusionExperiment(Env)
     # sandersExperiments(Env)
+    # joosExperiment(Enc)
     make_maps(Env)

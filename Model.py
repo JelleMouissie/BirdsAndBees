@@ -1,4 +1,8 @@
 
+"""
+Base for a model visualized in GUI.py
+Credits go out to the creators mentioned in GUI.py
+"""
 
 def make_getter(name):
     """Returns a getter function which returns the attribute `name'."""

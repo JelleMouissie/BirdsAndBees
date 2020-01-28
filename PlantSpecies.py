@@ -1,5 +1,12 @@
 
-# DEZE IN EEN APART TXT FILE ZETTEN??
+"""
+Project Computational Science
+Sander van Oostveen, Jelle Mouissie and Joos Akkerman
+
+This file defines the class PlantSpecies, Which contins the values for different
+plants, it's behaviour and a mehtod to generate the objects
+"""
+
 NUTRITION_PER_PLANT = 500
 ALL_PLANTS = {0: [NUTRITION_PER_PLANT, 2, 1, [1, 60]],
                 1: [NUTRITION_PER_PLANT, 2, 1, [10, 70]],
@@ -12,7 +19,7 @@ ALL_PLANTS = {0: [NUTRITION_PER_PLANT, 2, 1, [1, 60]],
                 8: [NUTRITION_PER_PLANT, 2, 1, [160, 190]],
                 9: [NUTRITION_PER_PLANT, 2, 1, [180, 200]]}
 
-class PlantSpecies:
+class plant_species:
 
     def __init__(self, nutrition, reproduction_coefficient, attractiveness, bloom_period):
         self.nutrition = nutrition
@@ -20,19 +27,38 @@ class PlantSpecies:
         self.bloom_period = bloom_period
         self.attractiveness = attractiveness
 
-    def GetNutrition(self):
+
+    def get_nutrition(self):
+        """
+        return the nutritional value for a plant.
+        """
         return self.nutrition
 
-    def GetAttractiveNess(self):
+
+    def get_attractiveness(self):
+        """
+        return the attractiveness of a plant.
+        """
         return self.attractiveness
 
-    def GetReproduction(self):
+
+    def get_reproduction(self):
+        """
+        Return the reproduction_coefficient for a plant.
+        """
         return self.reproduction_coefficient
 
-    def IsBlooming(self, currentDate):
-        return currentDate[0] >= self.bloom_period[0] and currentDate[0] <= self.bloom_period[1]
+
+    def is_blooming(self, current_date):
+        """
+        Return true if the plant is blooming based on a given date.
+        """
+        return current_date[0] >= self.bloom_period[0] and current_date[0] <= self.bloom_period[1]
 
 
-def GeneratePlantSpecies(species):
+def generate_plant_species(species):
+    """
+    Generate a given species of plant.
+    """
     plant = ALL_PLANTS[species]
-    return PlantSpecies(plant[0], plant[1], plant[2], plant[3])
+    return plant_species(plant[0], plant[1], plant[2], plant[3])

@@ -13,6 +13,9 @@ This file visualizes tests performed on the model
 LEVELS = [0, 4, 9, 14]
 
 def randomize_2d(lst):
+    """
+    Randomly shuffles a 2d Grid
+    """
     len1 = len(lst)
     len2 = len(lst[0])
 
@@ -21,12 +24,12 @@ def randomize_2d(lst):
 
     return [[flat[i*len1 + j] for i in range(len2)] for j in range(len1)]
 
+
 def grid_heatmap(levels, randomize):
     """
     visualizes grid as heatmap based on diversity of plants
     """
     fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
-    # cbar_ax = fig.add_axes([.91,.3,.03,.4])
 
     fig.suptitle('Food diversity for different levels of monoculture')
     grids = []
@@ -35,7 +38,7 @@ def grid_heatmap(levels, randomize):
     fractions = []
     for level in levels:
         grid = []
-        with open(f"Grids/10by10/{level}.csv") as f:
+        with open(f"Grids/Monoculture/{level}.csv") as f:
             csv_reader = csv.reader(f, delimiter=',')
             for csv_row in csv_reader:
                 row = []
@@ -76,10 +79,7 @@ def grid_heatmap(levels, randomize):
     for ax in axs.flat:
         ax.label_outer()
 
-    # TODO PUT COLORBAR IN
     col = plt.colorbar(im, ax = [axs[0,0],axs[0,1],axs[1,0], axs[1,1]])
-    # col.set_ticks([0,5,10])
-
     plt.show()
 
 
@@ -94,7 +94,6 @@ def scatter_mono(iterations, avg_alpha, avg_beta):
     for iteration in iterations:
         data = iterations[iteration]
         for datapoint in data:
-            # print(datapoint, int((datapoint-30)/2))
             results[19 - int((datapoint-30)/2)].append(data[datapoint])
             plt.scatter(datapoint, data[datapoint], s=5, color='red', label=None)
     plt.scatter(datapoint, data[datapoint], s=5, color='red', label='Population per Percentage')
@@ -111,14 +110,13 @@ def scatter_mono(iterations, avg_alpha, avg_beta):
     # plot regression line
     x = [40,60]
     y = [avg_alpha+avg_beta*i for i in x]
-    # plt.plot(x, y, color='blue', label='regression line')
 
-    # plt.title('Final population for differing levels of monoculture')
+    plt.title('Final population for differing levels of monoculture')
     plt.xlabel('Biodiversity (%)')
     plt.ylabel('Maximum Surviving population')
     plt.legend(loc='upper right')
     plt.xlim(75,25)
-    # plt.savefig('result2.svg', transparent=True)
+    plt.savefig('result2.svg', transparent=True)
     plt.show()
 
 
