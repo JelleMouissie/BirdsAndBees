@@ -174,7 +174,7 @@ def conclusion_experiment(Env):
     Write the result of the final experiment to a csv file
     """
     results = []
-    for j in range(10):
+    for j in range(30):
         print(f'Iteration: {j}')
         for i in range(30,70,2):
             print(f'Percentage: {i}')
