@@ -109,7 +109,7 @@ def ttest():
     vis.scatter_mono(iterations, avg_alpha, avg_beta)
 
     # perform t-test
-    ttest_result = stats.ttest_ind(betas, 1, equal_var=True)
+    ttest_result = stats.ttest_ind(betas, [0 for i in betas], equal_var=True)
     t_stat = ttest_result[0]
     p_value = ttest_result[1]
     print(f'Results from t-test:')
