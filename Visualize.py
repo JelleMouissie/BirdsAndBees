@@ -38,7 +38,7 @@ def grid_heatmap(levels, randomize):
     fractions = []
     for level in levels:
         grid = []
-        with open(f"Grids/Monoculture/{level}.csv") as f:
+        with open(f"Grids/10by10/{level}.csv") as f:
             csv_reader = csv.reader(f, delimiter=',')
             for csv_row in csv_reader:
                 row = []
@@ -110,13 +110,14 @@ def scatter_mono(iterations, avg_alpha, avg_beta):
     # plot regression line
     x = [40,60]
     y = [avg_alpha+avg_beta*i for i in x]
+    plt.plot(x,y, color='blue', label='Regression Line')
 
     plt.title('Final population for differing levels of monoculture')
     plt.xlabel('Biodiversity (%)')
     plt.ylabel('Maximum Surviving population')
     plt.legend(loc='upper right')
     plt.xlim(75,25)
-    plt.savefig('result2.svg', transparent=True)
+    plt.savefig('Figures/beepop_diversity_final.svg', transparent=True)
     plt.show()
 
 

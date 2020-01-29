@@ -24,17 +24,17 @@ ALL_PLANTS = {0: [NUTRITION_PER_PLANT, 2, 1, [1, 60]],
 MONO_PLANT = 5
 
 # generations only function properly in square grid with even breadt and width
-HEIGHT = BREADTH = 30
+HEIGHT = BREADTH = 10
 DIVERSITY = 9
 
 def gen_grid():
     """
-    Generates grids with increasing degree of monoculture
+    Generates grid with increasing degree of monoculture
     """
     # create initial grid:
-    plant_species = []
+    plantSpecies = []
     for plant_number in range(DIVERSITY):
-        plant_species += [ALL_PLANTS[plant_number]]
+        plantSpecies += [ALL_PLANTS[plant_number]]
 
     cells = []
     for y in range(HEIGHT):
@@ -43,8 +43,8 @@ def gen_grid():
             row += [gen_cell(DIVERSITY)]
         cells += [row]
 
-    # print initial grid to csv
-    with open('Grids/Monoculture/0.csv', 'w', newline='') as file:
+    # writerow initial grid to csv
+    with open('Grids/10by10/0.csv', 'w', newline='') as file:
         wr = csv.writer(file, quoting=csv.QUOTE_ALL)
         for row in cells:
             wr.writerow(row)
@@ -64,12 +64,11 @@ def gen_grid():
 
             level_cells.append(row)
 
-            # write grids to csv
-            with open(f'Grids/Monoculture/{level+1}.csv', 'w', newline='') as file:
+            # print grids to csv
+            with open(f'Grids/10by10/{level+1}.csv', 'w', newline='') as file:
                 wr = csv.writer(file, quoting=csv.QUOTE_ALL)
                 for row in level_cells:
                     wr.writerow(row)
-
 
 def gen_cell(diversity):
     """

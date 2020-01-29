@@ -31,10 +31,10 @@ class Hive:
         self.total_born = start_population
         self.growthscale = 1
         self.predators = predators
-        self.GeneratePopulation()
+        self.generate_population()
 
 
-    def GeneratePopulation(self):
+    def generate_population(self):
         """
         Generates population of forager bees (CA)
         """
@@ -171,23 +171,17 @@ class Hive:
 
         self.population = int(self.population * factor)
         self.food_level -= self.population * 165 * FOOD_PER_BEE
-        self.GeneratePopulation()
+        self.generate_population()
 
 
-    def GetStatus(self):
+    def get_status(self):
         """
         Return the current status of the hive.
         """
         return [self.population, len(self.scouts), len(self.employees)]
 
-    def Getpophistory(self):
+    def get_pop_history(self):
         """
         Return the history of population size in the Hive.
         """
         return self.populationhistory
-
-    def Getdeathhistory(self):
-        """
-        Return the history of deaths in the hive.
-        """
-        return self.deathhistory

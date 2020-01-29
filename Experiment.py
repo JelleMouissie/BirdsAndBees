@@ -4,6 +4,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 import random
 import csv
+import Analysis as ana
 
 """
 Project Computational Science
@@ -105,7 +106,7 @@ def run_sim(Env, percentage):
         if Env.step():
             i += 1
 
-    population = Env.hives[0].Getpophistory()
+    population = Env.hives[0].get_pop_history()
     peaks = find_peaks(population)
     print(peaks)
 
@@ -125,7 +126,7 @@ def run_sim(Env, percentage):
     plt.xlabel("Day in Foraging Season")
     plt.ylabel("Bees in Population")
 
-    plt.savefig('popGrowthStable.svg', transparent=True)
+    plt.savefig('Figures/popGrowthStable.svg', transparent=True)
 
     fig, axs = plt.subplots(1,2, sharex=True, sharey=True)
     div_grid2 = get_monoculture(Env.grid.cells)
@@ -136,36 +137,11 @@ def run_sim(Env, percentage):
     axs[1].set_title("Environment Year 5")
     axs[1].set(xlabel='Breadth', ylabel='Height',xticks=[0,2,4,6,8])
     plt.colorbar(im, ax=axs)
-    plt.savefig('EnvironmentChange.svg', transparent=True)
+    plt.savefig('Figures/EnvironmentChange.svg', transparent=True)
     plt.show()
 
     return coef, True
 
-def sandersExperiments(Env):
-    results = []
-    while(True):
-        coef, again = run_sim(Env, 10)
-        if again:
-            break
-
-    # for i in range(45,55):
-    #     temp_results = []
-    #     for j in range(5):
-    #         v = 0
-    #         while(True):
-    #             coef, again = run_sim(Env, i)
-    #             v += 1
-    #             if again:
-    #                 temp_results.append(coef)
-    #                 break
-    #             elif v > 5:
-    #                 temp_results.append(0)
-    #                 break
-    #         # temp_results.append(run_sim(Env, i))
-    #     results.append(np.mean(temp_results))
-    #
-    # plt.plot(range(45,55), results)
-    plt.show()
 
 def try_sim(Env, i):
     """
@@ -179,21 +155,21 @@ def try_sim(Env, i):
             break
 
 
-def joosExperiment(Env):
+def experiment(Env):
     results = []
     for j in range(10):
         print(f'Iteration: {j}')
         for i in range(0,100,10):
             print(f'Percentage: {i}')
             try_sim(Env, i)
-            results.append([j+1,i+1] + Env.hives[0].Getpophistory())
+            results.append([j+1,i+1] + Env.hives[0].get_pop_history())
 
-    with open('Results/mono_test.csv','a') as result_file:
+    with open('Results/mono_test.csv','w') as result_file:
         wr = csv.writer(result_file, dialect='excel')
         wr.writerows(results)
 
 
-def ConclusionExperiment(Env):
+def conclusion_experiment(Env):
     """
     Write the result of the final experiment to a csv file
     """
@@ -203,9 +179,9 @@ def ConclusionExperiment(Env):
         for i in range(30,70,2):
             print(f'Percentage: {i}')
             try_sim(Env, i)
-            results.append([j+1,i+1] + Env.hives[0].Getpophistory())
+            results.append([j+1,i+1] + Env.hives[0].get_pop_history())
 
-    with open('Results/conclusion2.csv','a') as result_file:
+    with open('Results/conclusion.csv','w') as result_file:
         wr = csv.writer(result_file, dialect='excel')
         wr.writerows(results)
 
@@ -230,12 +206,12 @@ def make_maps(Env):
         ax.label_outer()
 
     plt.colorbar(im, ax=[axs[0,0], axs[0,1], axs[1,0], axs[1,1]])
-    plt.savefig('diffPercentage3.svg', transparent=True)
+    plt.savefig('Figures/diffPercentage3.svg', transparent=True)
 
 
 if __name__ == "__main__":
     Env = En.Environment()
-    ConclusionExperiment(Env)
-    # sandersExperiments(Env)
-    # joosExperiment(Enc)
-    make_maps(Env)
+    # experiment(Env)
+    conclusion_experiment(Env)
+    # make_maps(Env)
+    ana.ttest()

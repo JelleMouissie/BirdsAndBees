@@ -12,7 +12,7 @@ from Hive import Hive
 Project Computational Science
 Sander van Oostveen, Jelle Mouissie and Joos Akkerman
 
-This file contains the basic Environment in which the bee simulation is done. 
+This file contains the basic Environment in which the bee simulation is done.
 """
 
 
@@ -48,7 +48,7 @@ class Environment(Model):
         """
         Draw the current status and date and plot either the grid or the population
         """
-        print(self.hives[0].GetStatus())
+        print(self.hives[0].get_status())
         print(self.current_date)
         # self.plotgrid()
         self.plotpop()
@@ -110,7 +110,7 @@ class Environment(Model):
         """
         plt.cla()
         for hive in self.hives:
-            pophistory = hive.Getpophistory()
+            pophistory = hive.get_pop_history()
             plt.plot(range(len(pophistory)), pophistory)
         plt.show()
 
@@ -129,7 +129,7 @@ class Environment(Model):
         """
         Return the population history of the Hive
         """
-        return self.hives[0].Getpophistory()
+        return self.hives[0].get_pop_history()
 
 
     def get_percentage_monoculture(self):

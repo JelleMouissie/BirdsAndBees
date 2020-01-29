@@ -28,13 +28,9 @@ class Grid:
         for x in range(diversity):
             self.plant_species += [generate_plant_species(x)]
 
-        # with open(f"Grids/Monoculture/{monoculture_level}.csv") as f:
         with open(f"Grids/10by10/{monoculture_level}.csv") as f:            #TODO HIER MOET NOG IETS MEE
             csv_reader = csv.reader(f, delimiter=',')
-            # cells = [line.split() for line in f]
-            # for row in cells:
-            #     print(row)
-            # cells = []
+
             for csv_row in csv_reader:
                 row = []
                 for cell in csv_row:
@@ -77,7 +73,6 @@ class Grid:
         """
         for row in self.cells:
             for cell in row:
-                pass
                 cell.increment_year()
 
 
