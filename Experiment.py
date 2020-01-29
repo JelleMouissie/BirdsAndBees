@@ -157,7 +157,7 @@ def try_sim(Env, i):
 
 def experiment(Env):
     results = []
-    for j in range(10):
+    for j in range(30):
         print(f'Iteration: {j}')
         for i in range(0,100,10):
             print(f'Percentage: {i}')

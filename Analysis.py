@@ -19,38 +19,6 @@ PERIODS = 5
 TIME_PER_SEASON = 200
 LEVELS = 5
 
-def test_mono():
-    """
-    Tests survival of bee colony for different levels of monoculture,
-    saves results to csv and plots results
-    """
-    for iter in range(ITERATIONS):
-        results = []
-
-        for level in range(LEVELS+1):
-            with open(f"Grids/Monoculture/{level}.csv", 'w'): pass
-
-        gen_grid()
-
-        # perform test on grid for different levels
-        for level in range(LEVELS + 1):
-            Env = Environment()
-            Env.override_values(10, 10, 10, level)
-            Env.reset()
-
-            for i in range(TIME_PER_SEASON*PERIODS-1):
-                Env.step()
-
-            result = [iter, level, Env.get_percentage_monoculture()]
-            for val in Env.get_results():
-                result += [val]
-            results += [result]
-
-        with open(f'Results/monoculture.csv', 'a', newline='') as file:
-            wr = csv.writer(file, quoting=csv.QUOTE_ALL)
-            for row in results:
-                wr.writerow(row)
-
 
 def regress(pop_sizes, mono_levels):
     """
@@ -121,5 +89,4 @@ if __name__ == '__main__':
     """
     Perform tests with different monocultures or a t-test
     """
-    # test_mono()
     ttest()
